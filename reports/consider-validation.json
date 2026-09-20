@@ -1,0 +1,10 @@
+{
+  "status": "FAIL",
+  "source_pages": 86,
+  "parse_errors": [
+    {
+      "node": "H-6",
+      "error": "H-6: duplicate target H-12"
+    }
+  ]
+}
