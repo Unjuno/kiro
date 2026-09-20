@@ -19,6 +19,30 @@ Story Catalog
       └─ Scene → Choice → Scene → ... → Ending
 ```
 
+## Voice-first localization
+
+A story has one canonical source language, but the player does not need to play in that language.
+
+Before play begins, the live agent should ask the player which language they want to use. The agent then translates only the currently revealed narration and choices into that language while preserving names, branch semantics, and attribution.
+
+```text
+Open story
+  ↓
+Ask player language
+  ↓
+Announce source / attribution in that language
+  ↓
+Narrate current scene
+  ↓
+Translate current choices
+  ↓
+Player chooses
+  ↓
+Open only the selected next state
+```
+
+Runtime translation is intentionally selective: the agent must not reveal or summarize unseen branches or endings.
+
 ## Repository layout
 
 ```text
@@ -44,6 +68,8 @@ When a story starts, the voice agent must announce the configured attribution, f
 
 > This story is adapted from "Example Story" by Example Author. Source and rights information are available in the story metadata.
 
+When runtime translation is enabled, the announcement may be spoken in the player's selected language, but the original title, author names, source, and rights metadata must remain intact.
+
 The exact wording is stored per story so public-domain, Creative Commons, and other permitted sources can be handled correctly.
 
 ## Scope
@@ -52,8 +78,10 @@ The first milestone is intentionally small:
 
 - multiple stories can be registered;
 - a player can choose a story;
+- the agent asks which language the player wants to use;
+- narration and visible choices can be translated at runtime;
 - each story contains explicit scene/choice branches;
-- scenes can be addressed individually;
+- only the current branch state is exposed during play;
 - endings are explicit;
 - source and rights metadata travel with the story;
 - the voice agent announces attribution before play.
