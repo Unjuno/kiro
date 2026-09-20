@@ -1,75 +1,33 @@
 # KIRO
 
-KIRO turns branching and multi-ending stories into a voice-agent-friendly web experience.
+Branching stories for browsers and live voice agents. Language selection comes **before** the catalog, story selection, attribution, and narration.
 
-The first playable work is **Consider the Consequences!** (Doris Webster & Mary Alden Hopkins, 1930).
+## Player contract
 
-## Runtime order
+Choose a language, choose a story, hear/read the origin notice, choose a viewpoint, then follow one visible decision at a time. The first work is *Consider the Consequences!* (1930), by Doris Webster and Mary Alden Hopkins.
 
-Language is always resolved first.
+The server returns only the current scene, the original decision paragraph, and current options. Native HTML links work without JavaScript and do not prefetch future branches. A live agent translates only visible material into the explicitly selected language and never changes target IDs or invents options. Browser-only play retains the canonical English story text; this project does not secretly call a paid translation API.
 
-```text
-Enter KIRO
-  ↓
-Choose / ask player language
-  ↓
-Show story catalog in that language
-  ↓
-Choose a story
-  ↓
-Announce source and attribution
-  ↓
-Reveal only the current scene and its choices
-  ↓
-Player chooses
-  ↓
-Reveal only the selected next scene
-  ↓
-Ending
-```
+## State and repeatability
 
-A live voice agent is instructed to translate only the currently visible narration and choices into the selected language. It must not expose unseen branches or endings.
+The player uses one route, `/`, with `lang`, `story`, `node`, and `v` query parameters. Different choices necessarily produce different query-bearing URLs. The snapshot version is carried forward. A known version mismatch is rejected rather than silently interpreting an old save against a new graph. Language changes preserve story progress. The catalog retains the selected language. No database, cookies, login, or secret is required.
 
-## One endpoint, no database
+These are navigable, public story states, not cryptographically protected saves. The design prevents accidental full-graph delivery; it does not stop someone intentionally exploring links or reading the public source repository.
 
-The MVP uses a single page route. State is carried by query parameters:
+## Data and checks
 
-```text
-/?lang=ja
-/?lang=ja&story=consider-the-consequences
-/?lang=ja&story=consider-the-consequences&node=H-1
-```
+`stories/consider-the-consequences/` holds metadata, an explicit graph, the source manifest, and per-page expanded HTML snapshots. Runtime code has no Wikisource fetch or HTML parser. Network access is restricted to the explicit import command. Verification recompiles the archived sources, checks their hashes, verifies targets, enumerates reachability, rejects cycles, and records a witness path to every ending.
 
-No database or user account is required. The server renders only the current state.
-
-## First story
-
-**Consider the Consequences!** is fetched scene-by-scene from Wikisource. KIRO never sends the full story graph to the browser or voice agent in one response.
-
-The original 1930 work is public domain in the United States. Copyright status may differ by jurisdiction; provenance and source links remain visible in the runtime.
-
-## Development
-
-```bash
+```sh
 npm install
-npm run dev
+npm run import:story       # only for intentional source acquisition/update
+npm run verify:story      # offline; rebuild from the archived HTML
+npm test
+npm run build
+npm start
+npm run test:http          # exhaustive plain-HTML traversal against localhost:3000
 ```
 
-Vercel can deploy the repository as a Next.js project.
+Reports live in `reports/`. `/verification` exposes counts and hashes only, not future story content. The parser fails closed on unresolved choices; absence of a parsed link alone is not accepted as proof of a valid ending.
 
-## Repository layout
-
-```text
-app/                  # single-page browser + agent runtime
-lib/
-  i18n.js             # language gate / UI copy
-  stories.js          # story catalog metadata
-  wikisource.js       # selective current-scene adapter
-stories/              # future locally ported story data
-schema/               # story metadata schema
-docs/                 # porting rules
-```
-
-## Porting rule
-
-Story source rights and software licensing are separate. Every imported or adapted story must keep origin, author, source, and rights metadata. Runtime translation is only appropriate where translation/adaptation is permitted.
+Source rights and software licensing are separate. See the work's `ATTRIBUTION.md`; US public-domain status must not be represented as worldwide clearance. Live voice translation fidelity is not proven by structural or HTTP tests.

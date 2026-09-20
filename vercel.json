@@ -1,4 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "buildCommand": "if [ ! -f stories/consider-the-consequences/graph.json ]; then python3 scripts/import_consider.py --fetch; fi && npm run build"
 }

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "consider-the-consequences",
+  "title": "Consider the Consequences!",
+  "language": "en",
+  "entry_node": "Helen",
+  "entry_nodes": ["Helen", "Jed", "Saunders"],
+  "description": "Three branching viewpoints in a 1930 interactive novel.",
+  "origin": {
+    "original_title": "Consider the Consequences!",
+    "authors": ["Doris Webster", "Mary Alden Hopkins"],
+    "source_url": "https://en.wikisource.org/wiki/Consider_the_Consequences!",
+    "source_type": "public-domain"
+  },
+  "rights": {
+    "status": "restricted",
+    "license": null,
+    "jurisdiction_notes": "Wikisource identifies the 1930 original as public domain in the United States. This does not determine its status in Japan or other jurisdictions; those remain unverified. Attribution is not a substitute for permission.",
+    "attribution_required": true,
+    "original_status": "PD-US",
+    "transcription_notice": "Retained protectable Wikisource contributions, if any, remain subject to the source terms, including CC BY-SA 4.0. No license is imposed on the public-domain original.",
+    "transcription_license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "scope": "Original English text; no third-party translation, illustrations, or audio."
+  },
+  "localization": {
+    "mode": "agent-runtime",
+    "fallback_language": "en",
+    "preserve_original_names": true,
+    "instructions": "Inherit the language explicitly selected at KIRO entry. Translate only the current scene and visible decisions. Do not change node IDs, URLs, facts, outcomes, or the meanings of choices. Do not silently fall back to English; ask the user when their language is unsupported."
+  },
+  "voice": {
+    "announce_origin_before_play": true,
+    "origin_announcement": "This is KIRO's interactive adaptation of Consider the Consequences!, by Doris Webster and Mary Alden Hopkins, first published in 1930. The English source was transcribed on Wikisource. I will translate the currently visible text as we play; this is not an official published translation.",
+    "translate_origin_announcement": true
+  },
+  "starts": [
+    {"node": "Helen", "label": "Helen Rogers"},
+    {"node": "Jed", "label": "Jed Harringdale"},
+    {"node": "Saunders", "label": "Saunders Mead"}
+  ]
+}
