@@ -1,0 +1,17 @@
+{
+  "id": "start",
+  "type": "scene",
+  "text": "Opening narration goes here.",
+  "choices": [
+    {
+      "id": "choice-a",
+      "label": "Take the first path.",
+      "next": "next-a"
+    },
+    {
+      "id": "choice-b",
+      "label": "Take the second path.",
+      "next": "next-b"
+    }
+  ]
+}
