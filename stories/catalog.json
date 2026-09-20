@@ -1,4 +1,9 @@
 {
   "version": 1,
-  "stories": []
+  "stories": [
+    {
+      "id": "consider-the-consequences",
+      "version": "75b24d5c40c640bb"
+    }
+  ]
 }

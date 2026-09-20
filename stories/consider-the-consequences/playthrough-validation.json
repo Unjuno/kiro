@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "version": "75b24d5c40c640bb",
+  "actual_source_nodes": 86,
+  "locale_scene_checks": 258,
+  "verified_edges": 87,
+  "unique_endings": 43,
+  "complete_playthroughs": 61,
+  "http_scene_visits": 116,
+  "languages": [
+    "ja",
+    "en",
+    "fr"
+  ],
+  "no_javascript": true,
+  "language_change_preserves_position": true
+}

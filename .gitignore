@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.vercel/
+.env*
+__pycache__/
+*.pyc
+.kiro-import.lock
+*.zip
+validation-artifacts/
