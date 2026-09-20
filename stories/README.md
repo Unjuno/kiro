@@ -1,25 +1,11 @@
 # Stories
 
-Each directory under `stories/` represents one independently ported branching story.
+The catalog selects between works. Each active work has a v2 story.json,
+a server-only nodes.json and source.manifest.json. See schema/*.schema.json.
+A scene contains original text, original decision_text, explicit choice IDs and
+next-node IDs. Endings are explicit and have no story choices.
 
-## Separation of concerns
-
-- `catalog.json` answers **which story should be played?**
-- `<story-id>/story.json` describes **what is this story and where does it start?**
-- `<story-id>/nodes/*.json` describes **what choices exist inside the story?**
-
-A story should therefore be portable without changing the runtime.
-
-## Recommended layout
-
-```text
-stories/
-  catalog.json
-  story-id/
-    story.json
-    nodes/
-      start.json
-      ...
-```
-
-Do not put third-party story text into KIRO until its reuse/porting basis has been recorded in `story.json`.
+The historical _template directory describes the earlier v1 proposal and is not
+registered or served. Use the completed consider-the-consequences v2 work as the
+reference for a new adapter; do not treat a placeholder or fixture as a real port.
+Player language is global to the player flow, not a per-story setup question.

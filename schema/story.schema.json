@@ -1,139 +1,24 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://kiro.local/schema/story.schema.json",
-  "title": "KIRO Story Metadata",
+  "title": "KIRO v2 story metadata",
   "type": "object",
-  "required": [
-    "schema_version",
-    "id",
-    "title",
-    "language",
-    "entry_node",
-    "origin",
-    "rights",
-    "localization",
-    "voice"
-  ],
+  "required": ["schema_version", "id", "version", "title", "language", "authors", "entries", "source_url", "attribution", "rights", "localization", "statistics"],
   "properties": {
-    "schema_version": {
-      "type": "integer",
-      "minimum": 1
+    "schema_version": {"const": 2},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,79}$"},
+    "version": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "title": {"type": "string", "minLength": 1},
+    "language": {"type": "string", "minLength": 2},
+    "authors": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "entries": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["id", "label"], "properties": {"id": {"type": "string", "minLength": 1}, "label": {"type": "string", "minLength": 1}}}
     },
-    "id": {
-      "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]*$"
-    },
-    "title": {
-      "type": "string",
-      "minLength": 1
-    },
-    "language": {
-      "type": "string",
-      "minLength": 2,
-      "description": "Canonical/source language of the ported story text; not the player's selected session language."
-    },
-    "entry_node": {
-      "type": "string",
-      "minLength": 1
-    },
-    "description": {
-      "type": "string"
-    },
-    "origin": {
-      "type": "object",
-      "required": ["original_title", "authors", "source_url", "source_type"],
-      "properties": {
-        "original_title": { "type": "string" },
-        "authors": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "source_url": {
-          "type": "string",
-          "format": "uri"
-        },
-        "source_type": {
-          "type": "string",
-          "enum": [
-            "public-domain",
-            "creative-commons",
-            "licensed",
-            "original",
-            "other"
-          ]
-        }
-      }
-    },
-    "rights": {
-      "type": "object",
-      "required": ["status", "attribution_required"],
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["unverified", "verified", "restricted"]
-        },
-        "license": {
-          "type": ["string", "null"]
-        },
-        "jurisdiction_notes": {
-          "type": "string"
-        },
-        "attribution_required": {
-          "type": "boolean"
-        }
-      }
-    },
-    "localization": {
-      "type": "object",
-      "description": "Per-story presentation policy. Player language is selected at KIRO session entry before catalog presentation or story selection, then inherited by each story.",
-      "required": [
-        "mode",
-        "fallback_language",
-        "preserve_original_names",
-        "instructions"
-      ],
-      "properties": {
-        "mode": {
-          "type": "string",
-          "enum": ["source-only", "agent-runtime", "pretranslated"]
-        },
-        "ask_player_language_before_play": {
-          "type": "boolean",
-          "deprecated": true,
-          "description": "Compatibility only. Do not use this per-story field to control prompting. KIRO resolves player language before catalog presentation and all stories inherit it without asking again."
-        },
-        "fallback_language": {
-          "type": "string",
-          "minLength": 2,
-          "description": "Fallback to offer when necessary, not an implicit player-language selection. Never silently override the selected session language."
-        },
-        "preserve_original_names": {
-          "type": "boolean"
-        },
-        "instructions": {
-          "type": "string",
-          "minLength": 1
-        }
-      }
-    },
-    "voice": {
-      "type": "object",
-      "required": [
-        "announce_origin_before_play",
-        "origin_announcement",
-        "translate_origin_announcement"
-      ],
-      "properties": {
-        "announce_origin_before_play": {
-          "type": "boolean"
-        },
-        "origin_announcement": {
-          "type": "string"
-        },
-        "translate_origin_announcement": {
-          "type": "boolean"
-        }
-      }
-    }
+    "source_url": {"type": "string", "format": "uri"},
+    "attribution": {"type": "string", "minLength": 1},
+    "rights": {"type": "object", "required": ["original_work", "verified_territories", "worldwide_clearance", "note"]},
+    "localization": {"type": "object", "required": ["mode", "use_session_language"], "properties": {"mode": {"const": "agent-runtime"}, "use_session_language": {"const": true}}},
+    "statistics": {"type": "object", "required": ["nodes", "edges", "endings"]},
+    "test_fixture": {"type": "boolean"}
   }
 }

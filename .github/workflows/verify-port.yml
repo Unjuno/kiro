@@ -1,0 +1,96 @@
+name: KIRO complete port validation
+on:
+  push:
+    branches: [kiro/full-local-port, main]
+    paths:
+      - 'app/**'
+      - 'lib/**'
+      - 'tools/**'
+      - 'tests/**'
+      - 'package*.json'
+      - 'next.config.mjs'
+      - 'vercel.json'
+      - '.github/workflows/verify-port.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kiro-validate-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Convert complete pinned original and validate the independent graph
+        shell: bash
+        run: |
+          mkdir -p validation-artifacts
+          python3 tools/import_wikisource.py | tee validation-artifacts/import.json
+          node tools/validate-story.mjs | tee validation-artifacts/graph.json
+          node -e "const s=JSON.parse(require('fs').readFileSync('stories/consider-the-consequences/story.json'));if(s.version!=='75b24d5c40c640bb')throw Error('Unexpected source version')"
+      - name: Unit tests and exhaustive real-corpus HTML playthrough
+        shell: bash
+        run: |
+          npm test 2>&1 | tee validation-artifacts/tests.txt
+          node tools/verify-playthrough.mjs | tee validation-artifacts/playthrough.json
+      - name: Install reproducible dependencies and audit
+        shell: bash
+        run: |
+          if test -f package-lock.json; then
+            npm ci --ignore-scripts --no-audit --no-fund
+          else
+            npm install --ignore-scripts --no-audit --no-fund
+          fi
+          npm audit --omit=dev --audit-level=high | tee validation-artifacts/audit.txt
+      - name: Production build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        shell: bash
+        run: npm run build 2>&1 | tee validation-artifacts/build.txt
+      - name: Verify actual Next.js HTTP responses without authentication
+        shell: bash
+        run: |
+          npm run start -- --hostname 127.0.0.1 --port 3001 > validation-artifacts/next-server.txt 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3001/ > /dev/null; then break; fi
+            sleep 1
+          done
+          BASE_URL=http://127.0.0.1:3001 REPORT_PATH=validation-artifacts/next-host.json node tools/verify-host.mjs
+      - name: Commit generated corpus and lock only to the migration branch
+        if: github.ref == 'refs/heads/kiro/full-local-port'
+        shell: bash
+        run: |
+          git config user.name 'kiro-import[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add stories/catalog.json stories/consider-the-consequences package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: complete verified 86-scene port and dependency lock'
+            git push origin HEAD:refs/heads/kiro/full-local-port
+          fi
+          git rev-parse HEAD | tee validation-artifacts/validated-commit.txt
+      - name: Check deployed production after main promotion
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          for attempt in $(seq 1 18); do
+            if curl --fail --silent --max-time 20 'https://kiro-flame.vercel.app/?lang=ja&story=consider-the-consequences&node=Helen' | grep -q 'data-kiro-version="75b24d5c40c640bb"'; then break; fi
+            sleep 10
+          done
+          BASE_URL=https://kiro-flame.vercel.app REPORT_PATH=validation-artifacts/production-host.json node tools/verify-host.mjs
+      - name: Package reviewed repository
+        if: success()
+        run: git archive --format=zip HEAD -o validation-artifacts/kiro-complete-port.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kiro-validated-port-${{ github.run_id }}
+          path: validation-artifacts/
+          retention-days: 7
+          if-no-files-found: error

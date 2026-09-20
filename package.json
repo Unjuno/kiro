@@ -1,15 +1,19 @@
 {
   "name": "kiro",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
+  "type": "module",
+  "engines": { "node": "22.x" },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "import:story": "python3 tools/import_wikisource.py",
+    "validate": "node tools/validate-story.mjs",
+    "test:js": "node --test tests/*.test.mjs",
+    "test:python": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test": "npm run test:js && npm run test:python",
+    "build": "npm run validate && npm run test:js && next build",
+    "serve:local": "node tools/local-server.mjs"
   },
-  "dependencies": {
-    "next": "^15.5.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-  }
+  "dependencies": { "next": "^15.5.24", "react": "^19.1.0", "react-dom": "^19.1.0" }
 }
