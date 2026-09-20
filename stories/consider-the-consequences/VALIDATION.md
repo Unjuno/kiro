@@ -1,0 +1,51 @@
+# Import validation
+
+Generated from the captured source; counts are measured, not placeholders.
+
+Nodes: 86; edges: 87; endings: 43.
+
+| Ending | Witness path |
+|---|---|
+| H-13 | Helen → H-2 → H-6 → H-13 |
+| H-14 | Helen → H-1 → H-3 → H-7 → H-14 |
+| H-15 | Helen → H-1 → H-3 → H-8 → H-15 |
+| H-17 | Helen → H-2 → H-5 → H-11 → H-17 |
+| H-19 | Helen → H-2 → H-5 → H-12 → H-19 |
+| H-22 | Helen → H-1 → H-3 → H-7 → H-16 → H-22 |
+| H-23 | Helen → H-2 → H-5 → H-11 → H-18 → H-23 |
+| H-24 | Helen → H-2 → H-5 → H-11 → H-18 → H-24 |
+| H-25 | Helen → H-2 → H-5 → H-12 → H-20 → H-25 |
+| H-26 | Helen → H-2 → H-5 → H-12 → H-20 → H-26 |
+| H-28 | Helen → H-1 → H-3 → H-7 → H-16 → H-21 → H-28 |
+| H-30 | Helen → H-2 → H-5 → H-12 → H-20 → H-27 → H-30 |
+| H-31 | Helen → H-2 → H-5 → H-12 → H-20 → H-27 → H-31 |
+| H-32 | Helen → H-1 → H-3 → H-7 → H-16 → H-21 → H-29 → H-32 |
+| H-34 | Helen → H-1 → H-3 → H-7 → H-16 → H-21 → H-29 → H-33 → H-34 |
+| H-35 | Helen → H-1 → H-3 → H-7 → H-16 → H-21 → H-29 → H-33 → H-35 |
+| H-9 | Helen → H-1 → H-4 → H-9 |
+| J-10 | Jed → J-1 → J-4 → J-10 |
+| J-12 | Jed → J-2 → J-5 → J-12 |
+| J-13 | Jed → J-2 → J-6 → J-13 |
+| J-14 | Jed → J-2 → J-6 → J-14 |
+| J-16 | Jed → J-2 → J-5 → J-11 → J-16 |
+| J-17 | Jed → J-2 → J-5 → J-11 → J-15 → J-17 |
+| J-18 | Jed → J-2 → J-5 → J-11 → J-15 → J-18 |
+| J-7 | Jed → J-1 → J-3 → J-7 |
+| J-8 | Jed → J-1 → J-3 → J-8 |
+| J-9 | Jed → J-1 → J-4 → J-9 |
+| S-10 | Saunders → S-1 → S-4 → S-10 |
+| S-15 | Saunders → S-1 → S-4 → S-9 → S-15 |
+| S-16 | Saunders → S-1 → S-4 → S-9 → S-16 |
+| S-17 | Saunders → S-2 → S-5 → S-11 → S-17 |
+| S-20 | Saunders → S-2 → S-5 → S-12 → S-20 |
+| S-21 | Saunders → S-2 → S-6 → S-13 → S-21 |
+| S-22 | Saunders → S-2 → S-6 → S-13 → S-22 |
+| S-24 | Saunders → S-2 → S-6 → S-14 → S-24 |
+| S-25 | Saunders → S-2 → S-5 → S-11 → S-18 → S-25 |
+| S-26 | Saunders → S-2 → S-5 → S-11 → S-18 → S-26 |
+| S-27 | Saunders → S-2 → S-5 → S-12 → S-19 → S-27 |
+| S-28 | Saunders → S-2 → S-5 → S-12 → S-19 → S-28 |
+| S-29 | Saunders → S-2 → S-6 → S-14 → S-23 → S-29 |
+| S-30 | Saunders → S-2 → S-6 → S-14 → S-23 → S-30 |
+| S-7 | Saunders → S-1 → S-3 → S-7 |
+| S-8 | Saunders → S-1 → S-3 → S-8 |

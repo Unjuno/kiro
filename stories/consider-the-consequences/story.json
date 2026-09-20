@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "consider-the-consequences",
+  "version": "75b24d5c40c640bb",
+  "test_fixture": false,
+  "title": "Consider the Consequences!",
+  "language": "en",
+  "year": 1930,
+  "authors": [
+    "Doris Webster",
+    "Mary Alden Hopkins"
+  ],
+  "description": {
+    "en": "Three intertwined lives. Choices about love, work and family lead to different consequences.",
+    "ja": "恋愛、仕事、家族についての選択が、交差する3人の人生を異なる結末へ導く分岐物語。"
+  },
+  "entries": [
+    {
+      "id": "Helen",
+      "label": "Helen Rogers"
+    },
+    {
+      "id": "Jed",
+      "label": "Jed Harringdale"
+    },
+    {
+      "id": "Saunders",
+      "label": "Saunders Mead"
+    }
+  ],
+  "source_url": "https://en.wikisource.org/wiki/Consider_the_Consequences!",
+  "rights": {
+    "original_work": "PD-US",
+    "evidence_url": "https://en.wikisource.org/wiki/Consider_the_Consequences!",
+    "verified_territories": [
+      "US"
+    ],
+    "worldwide_clearance": "unverified",
+    "note": "Wikisource identifies the original 1930 work as public domain in the United States. This is not a worldwide rights clearance. Retain source contributors, revision links and applicable license notices.",
+    "wiki_contributions_license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "attribution": "This interactive adaptation is based on Consider the Consequences! (1930) by Doris Webster and Mary Alden Hopkins. Transcription source: English Wikisource and its contributors. The narration is translated at play time by the selected voice agent; it is not an official published translation.",
+  "localization": {
+    "mode": "agent-runtime",
+    "use_session_language": true,
+    "preserve_original_names": true
+  },
+  "content_notice": "The original contains dated social attitudes and may include death, violence and suicide. These belong to the fictional work, not to advice for the player.",
+  "statistics": {
+    "nodes": 86,
+    "edges": 87,
+    "endings": 43
+  }
+}
