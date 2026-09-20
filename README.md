@@ -2,9 +2,37 @@
 
 KIRO ports branching and multi-ending stories into a web-addressable format that live voice agents can play with users.
 
+## Language comes first
+
+Language selection is the first KIRO interaction, before the catalog introduction, story selection, attribution, or narration. It is a session-level preference, not a per-story setup step.
+
+At entry, ask the player which language they want to use and wait for their answer. If the player has already explicitly selected a language in the current session or supplied it when resuming, reuse that selection instead of asking again. Do not silently choose a language from a story's source language or fallback setting.
+
+The selected language applies to KIRO's introduction, story descriptions and selection prompts, attribution, narration, choices, and other player-facing guidance. Carry it across story changes and returns to the catalog. An explicit language change must not reset story progress.
+
+```text
+Enter KIRO
+  ↓
+Ask player language (or reuse an explicit existing selection)
+  ↓
+Introduce KIRO and present the catalog in that language
+  ↓
+Player chooses a story
+  ↓
+Announce source / attribution in that language
+  ↓
+Translate and narrate the current scene and visible choices
+  ↓
+Player chooses
+  ↓
+Open only the selected next state, retaining the language
+```
+
+A direct story or resume link must also resolve the player language before presenting attribution or story text. It need not send the player back through the catalog.
+
 ## Core model
 
-KIRO separates two levels of navigation:
+After language selection, KIRO separates two levels of navigation:
 
 1. **Story selection** — choose which story to play.
 2. **Story branching** — move through that story's scenes and choices until an ending is reached.
@@ -21,27 +49,11 @@ Story Catalog
 
 ## Voice-first localization
 
-A story has one canonical source language, but the player does not need to play in that language.
+A story has one canonical source language, but the player does not need to play in that language. Each story inherits the player language already selected at KIRO entry; it must not ask again when play begins.
 
-Before play begins, the live agent should ask the player which language they want to use. The agent then translates only the currently revealed narration and choices into that language while preserving names, branch semantics, and attribution.
+The agent translates only the currently revealed narration and choices into that language while preserving names, branch semantics, and attribution. Runtime translation is intentionally selective: the agent must not reveal or summarize unseen branches or endings.
 
-```text
-Open story
-  ↓
-Ask player language
-  ↓
-Announce source / attribution in that language
-  ↓
-Narrate current scene
-  ↓
-Translate current choices
-  ↓
-Player chooses
-  ↓
-Open only the selected next state
-```
-
-Runtime translation is intentionally selective: the agent must not reveal or summarize unseen branches or endings.
+Language changes affect presentation only. They must not change story IDs, node IDs, choice IDs, link targets, or progress. If the selected language cannot be served, explain the limitation and ask the player to choose an alternative rather than silently falling back.
 
 ## Repository layout
 
@@ -76,9 +88,9 @@ The exact wording is stored per story so public-domain, Creative Commons, and ot
 
 The first milestone is intentionally small:
 
-- multiple stories can be registered;
-- a player can choose a story;
-- the agent asks which language the player wants to use;
+- player language is resolved at KIRO entry, before catalog presentation or story selection;
+- multiple stories can be registered and selected in that language;
+- the selected language persists across story changes;
 - narration and visible choices can be translated at runtime;
 - each story contains explicit scene/choice branches;
 - only the current branch state is exposed during play;

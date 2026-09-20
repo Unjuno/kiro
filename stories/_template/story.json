@@ -19,10 +19,9 @@
   },
   "localization": {
     "mode": "agent-runtime",
-    "ask_player_language_before_play": true,
     "fallback_language": "en",
     "preserve_original_names": true,
-    "instructions": "Ask the player which language they want to use. Translate only the currently revealed narration and choices into that language. Preserve branch meaning, proper names, and attribution. Never reveal unseen branches or endings."
+    "instructions": "Use the player language selected at KIRO entry, before catalog presentation or story selection. If it is not yet known, ask and wait before presenting the catalog, attribution, or story text. Do not ask again when switching stories. Translate only currently revealed narration and choices into that language. Preserve branch meaning, proper names, attribution, IDs, and destination links. Never reveal unseen branches or endings. Explicit language changes affect presentation only and must not reset progress. Never silently replace the selected language with the source or fallback language."
   },
   "voice": {
     "announce_origin_before_play": true,

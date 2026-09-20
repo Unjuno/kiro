@@ -30,7 +30,7 @@
     "language": {
       "type": "string",
       "minLength": 2,
-      "description": "Canonical/source language of the ported story text."
+      "description": "Canonical/source language of the ported story text; not the player's selected session language."
     },
     "entry_node": {
       "type": "string",
@@ -85,9 +85,9 @@
     },
     "localization": {
       "type": "object",
+      "description": "Per-story presentation policy. Player language is selected at KIRO session entry before catalog presentation or story selection, then inherited by each story.",
       "required": [
         "mode",
-        "ask_player_language_before_play",
         "fallback_language",
         "preserve_original_names",
         "instructions"
@@ -98,11 +98,14 @@
           "enum": ["source-only", "agent-runtime", "pretranslated"]
         },
         "ask_player_language_before_play": {
-          "type": "boolean"
+          "type": "boolean",
+          "deprecated": true,
+          "description": "Compatibility only. Do not use this per-story field to control prompting. KIRO resolves player language before catalog presentation and all stories inherit it without asking again."
         },
         "fallback_language": {
           "type": "string",
-          "minLength": 2
+          "minLength": 2,
+          "description": "Fallback to offer when necessary, not an implicit player-language selection. Never silently override the selected session language."
         },
         "preserve_original_names": {
           "type": "boolean"
