@@ -1,0 +1,98 @@
+name: KIRO original-source capture
+on:
+  push:
+    branches: [kiro/full-local-port]
+    paths: [.github/workflows/import-story.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kiro-original-source-capture
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: kiro/full-local-port
+          fetch-depth: 1
+      - name: Capture canonical Wikisource HTML and revision evidence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, re, time, hashlib, pathlib
+          from datetime import datetime, timezone
+          from urllib.request import Request, urlopen
+          from urllib.parse import urlencode
+          from urllib.error import HTTPError, URLError
+          BOOK = 'Consider the Consequences!'
+          API = 'https://en.wikisource.org/w/api.php'
+          folder = pathlib.Path('stories/consider-the-consequences')
+          folder.mkdir(parents=True, exist_ok=True)
+          out = folder / 'source.capture.json'
+          if out.exists():
+              snapshot = json.loads(out.read_text())
+              assert snapshot['format'] == 'kiro-wikisource-capture-v1'
+              assert len(snapshot['pages']) == len(snapshot['inventory']) > 3
+              print('Existing complete capture retained:', len(snapshot['pages']))
+              raise SystemExit(0)
+          def request(**kw):
+              url = API + '?' + urlencode(dict(format='json', formatversion=2, maxlag=5, **kw))
+              for attempt in range(3):
+                  time.sleep(0.5 + attempt)
+                  try:
+                      req = Request(url, headers={'User-Agent':'KIRO-offline-import/0.3 (https://github.com/Unjuno/kiro)', 'Accept':'application/json'})
+                      with urlopen(req, timeout=30) as response:
+                          raw = response.read(8000001)
+                      assert len(raw) <= 8000000, 'Oversize response'
+                      result = json.loads(raw)
+                      if result.get('error'):
+                          raise ValueError(result['error'])
+                      return result
+                  except (HTTPError, URLError, ValueError) as error:
+                      print(type(error).__name__, str(error), flush=True)
+                      if attempt == 2:
+                          raise
+          def inventory():
+              found, cursor = [], {}
+              for _ in range(20):
+                  data = request(action='query', list='allpages', apprefix=BOOK+'/', apnamespace=0, aplimit='max', **cursor)
+                  for p in data['query']['allpages']:
+                      name = p['title'][len(BOOK)+1:]
+                      if p['title'].startswith(BOOK+'/') and re.fullmatch(r'(Helen|Jed|Saunders|[HJS]-[1-9][0-9]{0,2})', name):
+                          found.append(dict(id=name,title=p['title'],pageid=p['pageid']))
+                  cursor = data.get('continue')
+                  if not cursor:
+                      break
+              else:
+                  raise ValueError('Pagination limit')
+              assert 3 < len(found) < 400
+              assert {'Helen','Jed','Saunders'} <= {p['id'] for p in found}
+              return sorted(found,key=lambda p:p['id'])
+          entries = inventory()
+          pages = []
+          for i, item in enumerate(entries,1):
+              print(f"Capture {i}/{len(entries)}: {item['id']}", flush=True)
+              p = request(action='parse',page=item['title'],prop='text|revid')['parse']
+              assert p['title'] == item['title'] and isinstance(p['revid'],int)
+              html = p['text']
+              assert isinstance(html,str) and html.strip()
+              pages.append(dict(**item, revision=p['revid'],html=html,html_sha256=hashlib.sha256(html.encode()).hexdigest()))
+          assert entries == inventory(), 'Source inventory changed during capture'
+          snapshot = dict(format='kiro-wikisource-capture-v1', work=BOOK, captured_at=datetime.now(timezone.utc).isoformat(), inventory=entries, pages=pages)
+          out.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+'\n')
+          print('Captured complete inventory:',len(pages),'pages;',out.stat().st_size,'bytes',flush=True)
+          PY
+      - name: Commit captured original only to the migration branch
+        shell: bash
+        run: |
+          git config user.name 'kiro-import[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add stories/consider-the-consequences/source.capture.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: preserve complete Wikisource source snapshot'
+            git push origin HEAD:refs/heads/kiro/full-local-port
+          fi
+          git rev-parse HEAD
