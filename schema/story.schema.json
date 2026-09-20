@@ -11,6 +11,7 @@
     "entry_node",
     "origin",
     "rights",
+    "localization",
     "voice"
   ],
   "properties": {
@@ -28,7 +29,8 @@
     },
     "language": {
       "type": "string",
-      "minLength": 2
+      "minLength": 2,
+      "description": "Canonical/source language of the ported story text."
     },
     "entry_node": {
       "type": "string",
@@ -81,15 +83,52 @@
         }
       }
     },
+    "localization": {
+      "type": "object",
+      "required": [
+        "mode",
+        "ask_player_language_before_play",
+        "fallback_language",
+        "preserve_original_names",
+        "instructions"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["source-only", "agent-runtime", "pretranslated"]
+        },
+        "ask_player_language_before_play": {
+          "type": "boolean"
+        },
+        "fallback_language": {
+          "type": "string",
+          "minLength": 2
+        },
+        "preserve_original_names": {
+          "type": "boolean"
+        },
+        "instructions": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
     "voice": {
       "type": "object",
-      "required": ["announce_origin_before_play", "origin_announcement"],
+      "required": [
+        "announce_origin_before_play",
+        "origin_announcement",
+        "translate_origin_announcement"
+      ],
       "properties": {
         "announce_origin_before_play": {
           "type": "boolean"
         },
         "origin_announcement": {
           "type": "string"
+        },
+        "translate_origin_announcement": {
+          "type": "boolean"
         }
       }
     }
