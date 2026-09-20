@@ -1,0 +1,21 @@
+name: KIRO source review export
+on:
+  push:
+    branches: [kiro/full-local-port]
+    paths: [.github/workflows/export-review.yml]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package repository without credentials or Git internals
+        run: git archive --format=zip HEAD -o kiro-source-review.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kiro-source-review
+          path: kiro-source-review.zip
+          retention-days: 3
+          if-no-files-found: error
