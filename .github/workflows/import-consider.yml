@@ -4,39 +4,52 @@ on:
     branches: [port/consider-offline]
     paths:
       - scripts/import_consider.py
+      - scripts/capture_consider.py
+      - scripts/fetch_node.py
+      - scripts/fetch_wikisource.mjs
       - .github/workflows/import-consider.yml
   workflow_dispatch:
 permissions:
   contents: write
 concurrency:
   group: kiro-consider-import
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   import:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONUTF8: '1'
+      NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 1
-      - name: Capture every original scene and validate graph
-        run: python3 scripts/import_consider.py --fetch
-      - name: Commit verified source snapshot and graph to this branch only
+      - name: Capture every source page and compile the graph
+        run: python scripts/capture_consider.py
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Offline graph, unit, build, and all HTML path tests
+        run: python scripts/build_and_test.py
+      - name: Preserve captured source and actual reports on the work branch
+        if: always()
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add stories/consider-the-consequences reports/consider-validation.json
+          for path in stories/consider-the-consequences reports package-lock.json; do
+            if [ -e "$path" ]; then git add "$path"; fi
+          done
           if ! git diff --cached --quiet; then
-            git commit -m 'data: archive and validate complete Consider the Consequences graph'
+            git commit -m 'data: preserve complete source snapshot and measured verification results'
             git push origin HEAD:"$GITHUB_REF_NAME"
           fi
-      - name: Report validation
+      - name: Publish verification summary
         if: always()
         run: |
-          if [ -f reports/consider-validation.json ]; then
-            cat reports/consider-validation.json
-            printf '\n### Story validation\n```json\n' >> "$GITHUB_STEP_SUMMARY"
-            cat reports/consider-validation.json >> "$GITHUB_STEP_SUMMARY"
-            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          for path in reports/import-status.json reports/consider-validation.json reports/http-validation.json; do
+            if [ -f "$path" ]; then cat "$path"; cat "$path" >> "$GITHUB_STEP_SUMMARY"; fi
+          done
