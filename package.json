@@ -15,5 +15,6 @@
     "build": "npm run validate && npm run test:js && next build",
     "serve:local": "node tools/local-server.mjs"
   },
-  "dependencies": { "next": "^15.5.24", "react": "^19.1.0", "react-dom": "^19.1.0" }
+  "dependencies": { "next": "^15.5.24", "react": "^19.1.0", "react-dom": "^19.1.0" },
+  "overrides": { "postcss": "8.5.28" }
 }
