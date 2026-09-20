@@ -1,0 +1,523 @@
+{
+  "retrieved_at": "2026-09-20T19:06:23.499978+00:00",
+  "source": "https://en.wikisource.org/w/api.php",
+  "pages": [
+    {
+      "title": "Consider the Consequences!/H-1",
+      "revision": 15620316,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-1",
+      "html_sha256": "127ceb89c754d768438cafe9f796eedc29f40be0a390b43dbec1736262f1cbc1"
+    },
+    {
+      "title": "Consider the Consequences!/H-10",
+      "revision": 15620421,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-10",
+      "html_sha256": "b628855938b5811dce796592f659ca7bac1b08e10c10d32fc78f47b39613824c"
+    },
+    {
+      "title": "Consider the Consequences!/H-11",
+      "revision": 15623490,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-11",
+      "html_sha256": "d7af4887bf6e0b3daeb916f41bccee195f6fb1f8175504d7c59451bfbd65ce8a"
+    },
+    {
+      "title": "Consider the Consequences!/H-12",
+      "revision": 15620430,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-12",
+      "html_sha256": "42a36c5baeab50f3903a324fcc8b7b8d413f8f8822fcdce3ab2a2bcb54f6c5a8"
+    },
+    {
+      "title": "Consider the Consequences!/H-13",
+      "revision": 15620434,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-13",
+      "html_sha256": "984999f4be25b9502e7f7ebe20c404f302b5e9b1696448dab432f8539cbf7756"
+    },
+    {
+      "title": "Consider the Consequences!/H-14",
+      "revision": 15620438,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-14",
+      "html_sha256": "b4213ac321be0f96dfb14372479cb4043b89e520d06da01584162e03346df833"
+    },
+    {
+      "title": "Consider the Consequences!/H-15",
+      "revision": 15620444,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-15",
+      "html_sha256": "a40d031ee78a14e4e54a36e7837fe663d40c8b89bab845d2b98ea6b3f0e9c54b"
+    },
+    {
+      "title": "Consider the Consequences!/H-16",
+      "revision": 15620448,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-16",
+      "html_sha256": "bd09c3d4cc8e751701bc8e107c2fc8362ba249f645569fae74bf07526ba5437d"
+    },
+    {
+      "title": "Consider the Consequences!/H-17",
+      "revision": 15620449,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-17",
+      "html_sha256": "b31439c6f3e89bbadd17eedafe4132dafa06301152264d281562295d9bcb3cd0"
+    },
+    {
+      "title": "Consider the Consequences!/H-18",
+      "revision": 15620454,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-18",
+      "html_sha256": "5f74faae784691dc1e26dfbbab0d66bf792691e305c3db91b98a029a5b420029"
+    },
+    {
+      "title": "Consider the Consequences!/H-19",
+      "revision": 15620459,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-19",
+      "html_sha256": "b6d9e4a746beb4e79b8aef601b3e6045d85a85c774cae1c2085699e1a589d758"
+    },
+    {
+      "title": "Consider the Consequences!/H-2",
+      "revision": 15620317,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-2",
+      "html_sha256": "ffe2e83a0b3b7ebebd43e43e74802bc62b13de8acf7a9c68ac33438e483f45c2"
+    },
+    {
+      "title": "Consider the Consequences!/H-20",
+      "revision": 15620465,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-20",
+      "html_sha256": "0b8522bbf2a949b945ed6661a805681555af8eb5fee70279bbe87a6b8856ccc3"
+    },
+    {
+      "title": "Consider the Consequences!/H-21",
+      "revision": 15620467,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-21",
+      "html_sha256": "37b8058d9967cd0e9e9b70dc9f8958093597f76120d1a067723b80ee45545fbf"
+    },
+    {
+      "title": "Consider the Consequences!/H-22",
+      "revision": 15620485,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-22",
+      "html_sha256": "6368c6b40411706a3cc5d965830df73a987e706bf6d224259beaa343aac35995"
+    },
+    {
+      "title": "Consider the Consequences!/H-23",
+      "revision": 15620494,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-23",
+      "html_sha256": "0f89165b2fc44d6fa0509b5874d540e489ec5bce1836b3913a175741dbe9c6d3"
+    },
+    {
+      "title": "Consider the Consequences!/H-24",
+      "revision": 15620503,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-24",
+      "html_sha256": "7dce85e074cb36b95e6a6af944076985a0a66172ff3c53cc1b5fff4170cd1357"
+    },
+    {
+      "title": "Consider the Consequences!/H-25",
+      "revision": 15622595,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-25",
+      "html_sha256": "4009f9dad14c2f00a6c6d8a5529dda8521573952b81f68fa8d461e3a61503b74"
+    },
+    {
+      "title": "Consider the Consequences!/H-26",
+      "revision": 15622599,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-26",
+      "html_sha256": "c6817aefd01cbf5dbaabe05ca06659ea99c8aab77511642cb079105c5236790a"
+    },
+    {
+      "title": "Consider the Consequences!/H-27",
+      "revision": 15622601,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-27",
+      "html_sha256": "9f4cc336d5d8de15d8506a0666738bc2f722ea8d983411e61a9197ee5da167ea"
+    },
+    {
+      "title": "Consider the Consequences!/H-28",
+      "revision": 15622606,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-28",
+      "html_sha256": "3f7e47d176699a700cd44856ea71d7e73287dc6472dacbf2c5badcc2c36c496d"
+    },
+    {
+      "title": "Consider the Consequences!/H-29",
+      "revision": 15622608,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-29",
+      "html_sha256": "e02d3498439bb3bb4bd4b56dcb50f8245b17a00450ffd1d1db074e766d3d6b98"
+    },
+    {
+      "title": "Consider the Consequences!/H-3",
+      "revision": 15620319,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-3",
+      "html_sha256": "c7ba6c9f71ef6c9955977daef8357a120ce14fb9a7e9ee785c24afa9afb09f62"
+    },
+    {
+      "title": "Consider the Consequences!/H-30",
+      "revision": 15622610,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-30",
+      "html_sha256": "f82485ce6c4057221148cf7252ba3b0fd218cbda2aa00c34f68c68bef2745d89"
+    },
+    {
+      "title": "Consider the Consequences!/H-31",
+      "revision": 15622611,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-31",
+      "html_sha256": "4c81818ed57eea2cf0661524dc31fee38a71c31a09ad421f1a7cf784cffeb67b"
+    },
+    {
+      "title": "Consider the Consequences!/H-32",
+      "revision": 15622613,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-32",
+      "html_sha256": "20bd1cc9dc50f782189937b2ab5b6a2137b1d20cff5f26c274e0ac503035e79e"
+    },
+    {
+      "title": "Consider the Consequences!/H-33",
+      "revision": 15622618,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-33",
+      "html_sha256": "0ac90255b8ecddba9e02c3e85a0bd75e03fb5030f61ad8a7887a649ae82b5a5f"
+    },
+    {
+      "title": "Consider the Consequences!/H-34",
+      "revision": 15622621,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-34",
+      "html_sha256": "00e79ede69c6f58ccb95b57bd1bbdfee93ed6796f98eb58d9d8b6ee49f8eb68c"
+    },
+    {
+      "title": "Consider the Consequences!/H-35",
+      "revision": 15622656,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-35",
+      "html_sha256": "f311848d73272a2d5423e276fa53c119a59fd9716f2d8143501ba71f264b273d"
+    },
+    {
+      "title": "Consider the Consequences!/H-4",
+      "revision": 15620321,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-4",
+      "html_sha256": "e68dbdb60176c56f86373da4658039487ebe23be786d3506137a59c7527081e8"
+    },
+    {
+      "title": "Consider the Consequences!/H-5",
+      "revision": 15620396,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-5",
+      "html_sha256": "9190b337e752157818923ea0592e24cde41b46c8451f5d28533f73bf4e08f31d"
+    },
+    {
+      "title": "Consider the Consequences!/H-6",
+      "revision": 15620401,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-6",
+      "html_sha256": "c759eb4c30eb6c4b8dde83b45d661a9722c0c723d129707648a0e3e5c5b6c9dd"
+    },
+    {
+      "title": "Consider the Consequences!/H-7",
+      "revision": 15620408,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-7",
+      "html_sha256": "7aa602b7402c71475e07d6f2de76a5a81a209f153799e1e454092cbc131772e1"
+    },
+    {
+      "title": "Consider the Consequences!/H-8",
+      "revision": 15620412,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-8",
+      "html_sha256": "49cc6335f66cf9e44b53d710e26eab889ccd18de57e2a1ab687b6abbbae874d4"
+    },
+    {
+      "title": "Consider the Consequences!/H-9",
+      "revision": 15620419,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/H-9",
+      "html_sha256": "c7a76c8cf86d83af70e497840bb4b133c64f575ac0f8a83e161ad64cbda3a979"
+    },
+    {
+      "title": "Consider the Consequences!/Helen",
+      "revision": 15620312,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/Helen",
+      "html_sha256": "46b558e8a529a81c908becb634bd441e1fcbb097474b135f3ba173824bcec6af"
+    },
+    {
+      "title": "Consider the Consequences!/J-1",
+      "revision": 15622687,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-1",
+      "html_sha256": "23e639f913895d582341ebca72f8cd5f853e53e1e24a20af15b79558bbdf76eb"
+    },
+    {
+      "title": "Consider the Consequences!/J-10",
+      "revision": 15622745,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-10",
+      "html_sha256": "408dfc5f82c84aeb372647891241cb4985ad20be874e7ee53a65d3c76d7c1e66"
+    },
+    {
+      "title": "Consider the Consequences!/J-11",
+      "revision": 15622747,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-11",
+      "html_sha256": "9026445d1c4c9becba1cb3700e6e2710c22d743ddf88f7525a40bab84b6f4ce4"
+    },
+    {
+      "title": "Consider the Consequences!/J-12",
+      "revision": 15622748,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-12",
+      "html_sha256": "37edbb0aa0bfc34140cc2125194a056b31488a665b53ab61e4cfdb4ad24c603d"
+    },
+    {
+      "title": "Consider the Consequences!/J-13",
+      "revision": 15622751,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-13",
+      "html_sha256": "ff096d185f7d5aa141867980596e269a087990b5362969336a64b961d355eff4"
+    },
+    {
+      "title": "Consider the Consequences!/J-14",
+      "revision": 15622753,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-14",
+      "html_sha256": "576fcbd06ea84d246eee7da56a5db9022d3a2a24b533cb936294037f42aee48d"
+    },
+    {
+      "title": "Consider the Consequences!/J-15",
+      "revision": 15622754,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-15",
+      "html_sha256": "c884d66e0052e39b67788f69697f8ccd6e72613022eb93813faa0d4627f60bf1"
+    },
+    {
+      "title": "Consider the Consequences!/J-16",
+      "revision": 15622755,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-16",
+      "html_sha256": "0bfcf9ddcb40c708f0e893490ead56d2e8ba66af636c844f93962bb42e1acf0f"
+    },
+    {
+      "title": "Consider the Consequences!/J-17",
+      "revision": 15622758,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-17",
+      "html_sha256": "13d7fc80c35136b8b15a884b0703f8282552a6d0672e58f74bc2fdde5f7c957d"
+    },
+    {
+      "title": "Consider the Consequences!/J-18",
+      "revision": 15622760,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-18",
+      "html_sha256": "4aef040ca63753dd494f690921d79c902f0214d9967462966be505dc674fc1b3"
+    },
+    {
+      "title": "Consider the Consequences!/J-2",
+      "revision": 15622692,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-2",
+      "html_sha256": "4dccae54e19cb423a7a154ec54e17401739df39a546c9c855642a9057fa58491"
+    },
+    {
+      "title": "Consider the Consequences!/J-3",
+      "revision": 15622698,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-3",
+      "html_sha256": "bb27e69449f0a2911ec80f5a9494a031473b688fb516be7c9ee1f447ca08ee4b"
+    },
+    {
+      "title": "Consider the Consequences!/J-4",
+      "revision": 15622699,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-4",
+      "html_sha256": "36a428dd53d600addbd716118f08dc54142025da3ddeaa36be0d0928a5110004"
+    },
+    {
+      "title": "Consider the Consequences!/J-5",
+      "revision": 15622729,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-5",
+      "html_sha256": "53b6c9a088ba0822b6632aa5c32975740761b707f475dc2a8d29b7a5cac52ba6"
+    },
+    {
+      "title": "Consider the Consequences!/J-6",
+      "revision": 15622736,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-6",
+      "html_sha256": "07e73198a21fdb2180ac48ab9c5acea9644ae80f6e15c3d827bc275d019e95f7"
+    },
+    {
+      "title": "Consider the Consequences!/J-7",
+      "revision": 15622740,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-7",
+      "html_sha256": "63dee9710a105ddbffa4bd458e02b009d079e01a9ce101d2c838023229244342"
+    },
+    {
+      "title": "Consider the Consequences!/J-8",
+      "revision": 15622742,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-8",
+      "html_sha256": "07958c60e7027343a2ee3dc325ad413ae2bb154879bad006a5cbbcb64ce3d508"
+    },
+    {
+      "title": "Consider the Consequences!/J-9",
+      "revision": 15622744,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/J-9",
+      "html_sha256": "98b5fd4bdc8f7980b0dbb844f2a1945941fcc834e7798b9650ad7e16910bf8a7"
+    },
+    {
+      "title": "Consider the Consequences!/Jed",
+      "revision": 15622522,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/Jed",
+      "html_sha256": "bf5daeb72f1385d63ffac1fa7d7c091266426787a9ad7af73a1667fd5ce14a18"
+    },
+    {
+      "title": "Consider the Consequences!/S-1",
+      "revision": 15622860,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-1",
+      "html_sha256": "710d9f6796a695405ef208f9730da7eec7c5c36e2617c51f02c72214a2008d20"
+    },
+    {
+      "title": "Consider the Consequences!/S-10",
+      "revision": 15623041,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-10",
+      "html_sha256": "e08015405e74b6bf963b06b78880f3622dbc7156952de2bdccf38403b66635d7"
+    },
+    {
+      "title": "Consider the Consequences!/S-11",
+      "revision": 15623037,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-11",
+      "html_sha256": "36e556b5889370766cf382a2100c8988aed1a26e119b9c00f6506b41c7a36b6d"
+    },
+    {
+      "title": "Consider the Consequences!/S-12",
+      "revision": 15623051,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-12",
+      "html_sha256": "2720baedad724214a2fcde1a95c126a74ec363d7f1f5afc97e0883b5457ab4bf"
+    },
+    {
+      "title": "Consider the Consequences!/S-13",
+      "revision": 15623055,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-13",
+      "html_sha256": "e810750c5d4733ec00e1ad70468381f66a9117b4ba7ee6cd5992f9101d1f053a"
+    },
+    {
+      "title": "Consider the Consequences!/S-14",
+      "revision": 15623058,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-14",
+      "html_sha256": "b952ee5bef6b4bb0a8b35d6307b5fa37b87e322a2add5b7f7b3e244fadaee6e0"
+    },
+    {
+      "title": "Consider the Consequences!/S-15",
+      "revision": 15623063,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-15",
+      "html_sha256": "ccd5e06a75cdfd3066b96f1045f29faa83b46702dfb09a84b506e63bb1e3a26e"
+    },
+    {
+      "title": "Consider the Consequences!/S-16",
+      "revision": 15623066,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-16",
+      "html_sha256": "88fdce2aaf51e82906ebc0919afafdf4936f8f3c0455e7fa686b584d18d3abc2"
+    },
+    {
+      "title": "Consider the Consequences!/S-17",
+      "revision": 15623068,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-17",
+      "html_sha256": "5252a9f4a8ae3cdee9f0224042985dff959c050af0b30b4627acbd983eebca26"
+    },
+    {
+      "title": "Consider the Consequences!/S-18",
+      "revision": 15623070,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-18",
+      "html_sha256": "a9718d3c51fb6f46fde9c78e1c2e94c503bab3ed6380c04ea7e04e22e67a5ce4"
+    },
+    {
+      "title": "Consider the Consequences!/S-19",
+      "revision": 15623074,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-19",
+      "html_sha256": "bf5e01480c125069d84967eb1a99ad7aa1c8f5a2f31c4282fddba7735ef5d28b"
+    },
+    {
+      "title": "Consider the Consequences!/S-2",
+      "revision": 15622862,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-2",
+      "html_sha256": "28488848454e7303cd1855e12605ac5aa27f7ba297ba78aebba020a22c4b06f5"
+    },
+    {
+      "title": "Consider the Consequences!/S-20",
+      "revision": 15623076,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-20",
+      "html_sha256": "fc5319b72be65f1df827c022f4772db0ee0fdb346f9999ed42a36dedb383a5a2"
+    },
+    {
+      "title": "Consider the Consequences!/S-21",
+      "revision": 15623078,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-21",
+      "html_sha256": "3d2593f6d710a074eb632512d9a3d71d95c6a0c07e8f7244c4742ce7354ae4f0"
+    },
+    {
+      "title": "Consider the Consequences!/S-22",
+      "revision": 15623083,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-22",
+      "html_sha256": "6837b2cb79a16d15dab445438e2e120c89d4d01844a0159defcb9c3c0cc3e893"
+    },
+    {
+      "title": "Consider the Consequences!/S-23",
+      "revision": 15623085,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-23",
+      "html_sha256": "b589e8d9c1b08ef1ee5600106ab8bee3e17b957da122595159e7f52ef0ff65dd"
+    },
+    {
+      "title": "Consider the Consequences!/S-24",
+      "revision": 15623090,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-24",
+      "html_sha256": "f4bbb2d3ad4d67bd9149bb9e76fa1c0c5ec8f2186e2d71a8c54b3bd6c518b580"
+    },
+    {
+      "title": "Consider the Consequences!/S-25",
+      "revision": 15623098,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-25",
+      "html_sha256": "8c17b2b0833b3595993b81af62e32d1d5a58c653d5e919db766d6fb5632701ca"
+    },
+    {
+      "title": "Consider the Consequences!/S-26",
+      "revision": 15623101,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-26",
+      "html_sha256": "c692c800e5f37e586e524f96a2972481b5cebe8914b936a6df78c98bb7369134"
+    },
+    {
+      "title": "Consider the Consequences!/S-27",
+      "revision": 15623104,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-27",
+      "html_sha256": "dbaa258338175794401b57d0e0f3467ccfaafdab2712e62fdb71dbf9b7f05af2"
+    },
+    {
+      "title": "Consider the Consequences!/S-28",
+      "revision": 15623107,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-28",
+      "html_sha256": "0194b67d2cebdf0236316b0fb171624e06176260178db5005a4c2a6a1d2f36e7"
+    },
+    {
+      "title": "Consider the Consequences!/S-29",
+      "revision": 15623109,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-29",
+      "html_sha256": "7dedf28ed2c676ae70b31385abdac78af8c5d24b98970445868024892b626bd6"
+    },
+    {
+      "title": "Consider the Consequences!/S-3",
+      "revision": 15622864,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-3",
+      "html_sha256": "98bd5e81a0f7e1e3516880f1d7680f61317b9bafc881c60103b798bfff668d55"
+    },
+    {
+      "title": "Consider the Consequences!/S-30",
+      "revision": 15623111,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-30",
+      "html_sha256": "809e27a521e1c361a8ec824955b388e514610c5c7c8c74cff6ddfb6c4de1b8dd"
+    },
+    {
+      "title": "Consider the Consequences!/S-4",
+      "revision": 15622866,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-4",
+      "html_sha256": "650f01d7174f16ea2ed29d52b8ae1b4190c37b95106d21ec18474bfc968644d6"
+    },
+    {
+      "title": "Consider the Consequences!/S-5",
+      "revision": 15622869,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-5",
+      "html_sha256": "8a4d1156298a238460d939d4fa5b921d8a143fc859a3f482860410e922d9fbd2"
+    },
+    {
+      "title": "Consider the Consequences!/S-6",
+      "revision": 15622870,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-6",
+      "html_sha256": "01fb333255b77e509b6d98c139f72a2946cba89968c61478045ccb10374169ea"
+    },
+    {
+      "title": "Consider the Consequences!/S-7",
+      "revision": 15622880,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-7",
+      "html_sha256": "66ea7f859ed8c384afbadbcaebb107a1e10e7f9e837d91917db794361b2ed6af"
+    },
+    {
+      "title": "Consider the Consequences!/S-8",
+      "revision": 15622914,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-8",
+      "html_sha256": "9152ded0dc8058633cf51b308675132fcd43859baaac3d8696df04b5d12570f3"
+    },
+    {
+      "title": "Consider the Consequences!/S-9",
+      "revision": 15623038,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/S-9",
+      "html_sha256": "93511814c6bec959e0fc312d34e670b01f642834425cacefc614af36c43b4935"
+    },
+    {
+      "title": "Consider the Consequences!/Saunders",
+      "revision": 15622525,
+      "url": "https://en.wikisource.org/wiki/Consider_the_Consequences!/Saunders",
+      "html_sha256": "4b652b18cda55385d86be09e8d9d136db8ad4f1858d0b4f4ebfb3b35d186ec8a"
+    }
+  ],
+  "ignored_subpages": []
+}

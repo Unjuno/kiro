@@ -1,0 +1,5 @@
+{
+  "status": "FAIL",
+  "error": "H-10: unresolved navigation in body",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\a\\kiro\\kiro\\scripts\\capture_consider.py\", line 13, in <module>\n    work.verify_and_compile()\n  File \"D:\\a\\kiro\\kiro\\scripts\\import_consider.py\", line 213, in verify_and_compile\n    nodes[node] = parse_scene(node, record)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\kiro\\kiro\\scripts\\import_consider.py\", line 155, in parse_scene\n    raise ValueError(f'{node}: unresolved navigation in body')\nValueError: H-10: unresolved navigation in body\n"
+}
