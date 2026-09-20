@@ -17,8 +17,16 @@
     "jurisdiction_notes": "",
     "attribution_required": true
   },
+  "localization": {
+    "mode": "agent-runtime",
+    "ask_player_language_before_play": true,
+    "fallback_language": "en",
+    "preserve_original_names": true,
+    "instructions": "Ask the player which language they want to use. Translate only the currently revealed narration and choices into that language. Preserve branch meaning, proper names, and attribution. Never reveal unseen branches or endings."
+  },
   "voice": {
     "announce_origin_before_play": true,
-    "origin_announcement": "This story is adapted from \"Original title\" by Original author."
+    "origin_announcement": "This story is adapted from \"Original title\" by Original author.",
+    "translate_origin_announcement": true
   }
 }
