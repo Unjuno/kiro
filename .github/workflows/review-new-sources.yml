@@ -1,0 +1,83 @@
+name: Review openly licensed story sources
+on:
+  push:
+    branches: [feat/multi-story-import]
+    paths: [.github/workflows/review-new-sources.yml]
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Fetch author pages and inspect free source downloads
+        shell: bash
+        run: |
+          mkdir -p source-review
+          python3 - <<'PY'
+          import json, pathlib, re, http.cookiejar, hashlib, zipfile, io
+          from urllib.request import Request, build_opener, HTTPCookieProcessor
+          from urllib.parse import urlencode
+          from html import unescape
+          out = pathlib.Path('source-review')
+          opener = build_opener(HTTPCookieProcessor(http.cookiejar.CookieJar()))
+          opener.addheaders = [('User-Agent', 'KIRO-source-review/0.4 (https://github.com/Unjuno/kiro)')]
+          for slug in ['year-sixteen','where-the-light-dies']:
+              base = 'https://maxspartan.itch.io/' + slug
+              folder = out / slug
+              folder.mkdir()
+              report = {'source':base}
+              try:
+                  page = opener.open(base, timeout=30).read(3000000).decode()
+                  (folder/'author-page.html').write_text(page)
+                  report['license_mention'] = 'This game is licensed under a CC BY license' in page
+                  uploads = []
+                  for m in re.finditer(r'data-upload_id=[\"\x27](\d+)[\"\x27]', page):
+                      tail = page[m.start():m.start()+1600]
+                      uploads.append({'id':m[1], 'snippet':tail})
+                  report['uploads'] = uploads
+                  csrf = re.search(r'name=[\"\x27]csrf_token[\"\x27][^>]*content=[\"\x27]([^\"\x27]+)', page)
+                  if not csrf:
+                      csrf = re.search(r'csrf_token[\"\x27]\s*:\s*[\"\x27]([^\"\x27]+)', page)
+                  choices = [u for u in uploads if re.search(r'win\.zip|linux\.tar', u['snippet'])]
+                  if report['license_mention'] and choices:
+                      candidate = choices[0]
+                      payload = urlencode({'csrf_token':unescape(csrf[1]) if csrf else ''}).encode()
+                      req = Request(base+'/file/'+candidate['id'], data=payload, headers={'Referer':base, 'X-Requested-With':'XMLHttpRequest'})
+                      data = json.load(opener.open(req, timeout=30))
+                      report['download_response_keys'] = list(data)
+                      if 'url' in data:
+                          url = data['url']
+                          if not url.startswith('https://'): raise ValueError('Expected HTTPS download')
+                          response = opener.open(url, timeout=60)
+                          raw = response.read(180000001)
+                          if len(raw)>180000000: raise ValueError('Download exceeds review size limit')
+                          report['archive_sha256'] = hashlib.sha256(raw).hexdigest()
+                          report['archive_bytes'] = len(raw)
+                          if zipfile.is_zipfile(io.BytesIO(raw)):
+                              z = zipfile.ZipFile(io.BytesIO(raw))
+                              report['archive_files'] = z.namelist()
+                              selected = [i for i in z.infolist() if i.filename.endswith('.rpy') and '/game/' in '/'+i.filename and i.file_size < 2000000]
+                              for i in selected:
+                                  # Archive paths are evidence only. Save bytes under flat names.
+                                  safe = i.filename.replace('/','__').replace('\\','__')
+                                  (folder/safe).write_bytes(z.read(i))
+                              report['rpy_files'] = len(selected)
+                          else:
+                              import tarfile
+                              with tarfile.open(fileobj=io.BytesIO(raw)) as z:
+                                  report['archive_files'] = z.getnames()
+                                  selected = [i for i in z.getmembers() if i.isfile() and i.name.endswith('.rpy') and '/game/' in '/'+i.name and i.size < 2000000]
+                                  for i in selected:
+                                      (folder/i.name.replace('/','__').replace('\\','__')).write_bytes(z.extractfile(i).read())
+                                  report['rpy_files'] = len(selected)
+              except Exception as error:
+                  report['error'] = type(error).__name__ + ': ' + str(error)
+              (folder/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+              print(slug, {k:v for k,v in report.items() if k not in ('uploads','archive_files')})
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kiro-new-source-review
+          path: source-review/
+          retention-days: 7
