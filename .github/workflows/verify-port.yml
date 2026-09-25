@@ -1,9 +1,11 @@
 name: KIRO complete port validation
 on:
   push:
-    branches: [kiro/full-local-port, main]
+    branches: [kiro/full-local-port, design/living-book, main]
     paths:
       - 'app/**'
+      - 'public/**'
+      - 'stories/**'
       - 'lib/**'
       - 'tools/**'
       - 'tests/**'
@@ -16,7 +18,7 @@ permissions:
   contents: write
 concurrency:
   group: kiro-validate-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -52,6 +54,14 @@ jobs:
           NEXT_TELEMETRY_DISABLED: '1'
         shell: bash
         run: npm run build 2>&1 | tee validation-artifacts/build.txt
+      - name: Install isolated visual QA tooling
+        shell: bash
+        run: |
+          python3 -m venv /tmp/kiro-browser
+          /tmp/kiro-browser/bin/pip install --disable-pip-version-check 'playwright==1.57.0'
+          if ! command -v google-chrome >/dev/null; then
+            /tmp/kiro-browser/bin/python -m playwright install --with-deps chromium
+          fi
       - name: Verify actual Next.js HTTP responses without authentication
         shell: bash
         run: |
@@ -63,6 +73,9 @@ jobs:
             sleep 1
           done
           BASE_URL=http://127.0.0.1:3001 REPORT_PATH=validation-artifacts/next-host.json node tools/verify-host.mjs
+          export BASE_URL=http://127.0.0.1:3001
+          export CHROMIUM_PATH="$(command -v google-chrome || true)"
+          /tmp/kiro-browser/bin/python tools/verify-design.py --out validation-artifacts/design
       - name: Commit generated corpus and lock only to the migration branch
         if: github.ref == 'refs/heads/kiro/full-local-port'
         shell: bash
@@ -80,7 +93,7 @@ jobs:
         shell: bash
         run: |
           for attempt in $(seq 1 18); do
-            if curl --fail --silent --max-time 20 'https://kiro-flame.vercel.app/?lang=ja&story=consider-the-consequences&node=Helen' | grep -q 'data-kiro-version="75b24d5c40c640bb"'; then break; fi
+            if curl --fail --silent --max-time 20 'https://kiro-flame.vercel.app/?lang=ja&story=consider-the-consequences&node=Helen' | grep -q 'name="kiro-design" content="living-book-v1"'; then break; fi
             sleep 10
           done
           BASE_URL=https://kiro-flame.vercel.app REPORT_PATH=validation-artifacts/production-host.json node tools/verify-host.mjs
