@@ -1,0 +1,107 @@
+-  return page(`<article class="reader${ending?' reader-ending':''}" data-kiro-state="${esc(node.id)}" data-kiro-version="${esc(story.version)}"><header class="reader-heading"><p class="eyebrow">${esc(ending?text.ending:text.scene)} <span class="eyebrow-rule"></span> ${esc(node.id)}</p>${ending?'<img class="ending-mark" src="/art/branch-mark.svg" alt="" width="90" height="90">':''}<h1>${esc(story.title)}</h1><div class="reader-rule" aria-hidden="true">◆</div></header><div class="prose" lang="${esc(story.language)}" data-kiro-visible-story-text>${paragraphs(node.text)}</div>${choices}<aside class="reading-note"><p class="save-heading">${esc(d.resume)}</p><p class="save-note">${esc(text.download)}</p><p class="browser-note">${esc(text.browser)}</p></aside>${attribution(story,text,selected)}<p class="source-link"><a href="${esc(node.source.url)}" rel="noreferrer">Source: ${esc(node.id)}</a></p>${toolbar(state,text)}${protocol(selected,'scene',text)}</article>`,selected,ending?'ending':'scene');
++  return page(`<article class="reader${ending?' reader-ending':''}" data-kiro-state="${esc(node.id)}" data-kiro-version="${esc(story.version)}"><header class="reader-heading"><p class="eyebrow">${esc(ending?text.ending:text.scene)} <span class="eyebrow-rule"></span> ${esc(node.id)}</p>${ending?'<img class="ending-mark" src="/art/branch-mark.svg" alt="" width="90" height="90">':''}<h1>${esc(story.title)}</h1><div class="reader-rule" aria-hidden="true">◆</div></header><div class="prose" lang="${esc(story.language)}" data-kiro-visible-story-text>${paragraphs(node.text)}</div>${choices}<aside class="reading-note"><p class="save-heading">${esc(d.resume)}</p><p class="save-note">${esc(text.download)}</p><p class="browser-note">${esc(browserNotice(story,selected))}</p></aside>${attribution(story,text,selected)}<p class="source-link"><a href="${esc(node.source.url)}" rel="noreferrer">Source: ${esc(node.id)}</a></p>${toolbar(state,text)}${protocol(selected,'scene',text,state)}</article>`,selected,ending?'ending':'scene');
+ }
+diff --git a/lib/request-state.mjs b/lib/request-state.mjs
+new file mode 100644
+index 0000000..ff12f65
+--- /dev/null
++++ b/lib/request-state.mjs
+@@ -0,0 +1,50 @@
++/** URL state is shared by HTML and agent responses. No cookies or agent memory. */
++export const STATE_KEYS = ['lang', 'story', 'node', 'v'];
++export function normalizeLanguage(value) {
++  if (typeof value !== 'string' || !value.trim() || value.length > 64) return null;
++  if (!/^[a-zA-Z]{2,8}(?:-[a-zA-Z0-9]{1,8})*$/.test(value.trim())) return null;
++  try { return Intl.getCanonicalLocales(value.trim())[0] ?? null; } catch { return null; }
++}
++export function href(state = {}) {
++  const params = new URLSearchParams();
++  for (const key of [...STATE_KEYS, 'format']) {
++    if (typeof state[key] === 'string' && state[key]) params.set(key, state[key]);
++  }
++  return params.size ? `/?${params}` : '/';
++}
++/** Resolve without exposing data from any unselected node. */
++export function resolveRequest(input, library) {
++  let url;
++  try { url = new URL(input, 'https://kiro.invalid'); }
++  catch { return { stage:'error', status:400, reason:'invalid', state:{lang:'en'} }; }
++  const state = {};
++  const fail = (status = 400, reason = 'invalid') => ({stage:'error',status,reason,state});
++  if (url.pathname !== '/' || url.href.length > 8192) return fail();
++  for (const key of [...STATE_KEYS, 'format']) {
++    if (url.searchParams.getAll(key).length > 1) return fail();
++    state[key] = url.searchParams.get(key) ?? '';
++  }
++  if (!['', 'html', 'json'].includes(state.format)) return fail();
++  if (!state.lang) return {stage:'language',status:200,state};
++  const language = normalizeLanguage(state.lang);
++  if (!language) return {stage:'language',status:400,state,reason:'language'};
++  state.lang = language;
++  if (!state.story) {
++    if (state.node || state.v) return fail(404);
++    if (!library.size) return fail(503);
++    return {stage:'catalog',status:200,state};
++  }
++  const story = library.get(state.story);
++  if (!story) return fail(404);
++  if (state.v && state.v !== story.version) return fail(409, 'version');
++  state.v = story.version;
++  if (!state.node) return {stage:'story',status:200,state,story};
++  const node = story.nodes.get(state.node);
++  if (!node) return fail(404);
++  return {stage:node.type === 'ending' ? 'ending' : 'scene', status:200, state, story, node};
++}
++export function sourceDescription(story, lang) {
++  if (typeof story.description === 'string') return story.description;
++  return story.description?.[lang] ?? story.description?.[lang.split('-')[0]] ??
++    story.description?.[story.language] ?? story.description?.en ?? '';
++}
+diff --git a/lib/story-metadata.mjs b/lib/story-metadata.mjs
+new file mode 100644
+index 0000000..63dcc1e
+--- /dev/null
++++ b/lib/story-metadata.mjs
+@@ -0,0 +1,25 @@
++import { normalizeLanguage } from './request-state.mjs';
++export const STORY_ID = /^[a-z0-9][a-z0-9-]{0,79}$/;
++export function isSourceURL(value) {
++  try {const u=new URL(value);return typeof value==='string'&&u.protocol==='https:'&&!u.username&&!u.password;}
++  catch {return false;}
++}
++const text = v => typeof v==='string' && Boolean(v.trim());
++export function validateMetadata(story, id=story?.id) {
++  if (!story || !STORY_ID.test(id??'') || story.id!==id || !text(story.title)) throw Error('Invalid story identity/title');
++  if (!normalizeLanguage(story.language)) throw Error('Invalid canonical source language');
++  if (story.attribution_language!==undefined && !normalizeLanguage(story.attribution_language)) throw Error('Invalid attribution language');
++  if (!Array.isArray(story.authors)||!story.authors.length||!story.authors.every(text)) throw Error('Missing author metadata');
++  if (!story.description || typeof story.description!=='object'||Array.isArray(story.description) ||
++      !Object.keys(story.description).length || !Object.entries(story.description).every(([k,v])=>normalizeLanguage(k)&&text(v))) throw Error('Invalid localized descriptions');
++  if (!Array.isArray(story.entries)||!story.entries.length || !story.entries.every(e=>text(e?.id)&&text(e?.label)) ||
++      new Set(story.entries.map(e=>e.id)).size!==story.entries.length) throw Error('Invalid/duplicate entry viewpoints');
++  if (!isSourceURL(story.source_url)||!text(story.attribution)) throw Error('Missing source/attribution');
++  if (!story.rights||!text(story.rights.original_work)||!text(story.rights.note)||
++      !Array.isArray(story.rights.verified_territories)||!story.rights.verified_territories.length||
++      !story.rights.verified_territories.every(text)||!text(story.rights.worldwide_clearance)) throw Error('Incomplete rights metadata');
++  if (story.rights.evidence_url!==undefined&&!isSourceURL(story.rights.evidence_url)) throw Error('Invalid rights evidence URL');
++  if (story.localization?.mode!=='agent-runtime'||story.localization?.use_session_language!==true) throw Error('Unsupported localization mode');
++  for (const key of ['nodes','edges','endings']) if (!Number.isSafeInteger(story.statistics?.[key])||story.statistics[key]<0) throw Error('Invalid story statistics');
++  return story;
++}
+diff --git a/lib/twee.mjs b/lib/twee.mjs
+new file mode 100644
+index 0000000..3a073e5
+--- /dev/null
++++ b/lib/twee.mjs
+@@ -0,0 +1,140 @@
++/**
++ * Twee 3 STATIC profile only. No Harlowe/SugarCube interpreter, JS, HTML or macros.
++ * Prose must precede a final block of one link per line. Terminal passages MUST
++ * be declared [ending] or in metadata.ending_passages. Unsupported data fails.
++ * Source spec: https://github.com/iftechfoundation/twine-specs/blob/master/twee-3-specification.md
++ */
++import { createHash } from 'node:crypto';
++import { sha256, validateGraph } from './graph.mjs';
++import { normalizeLanguage } from './request-state.mjs';
++import { STORY_ID, isSourceURL, validateMetadata } from './story-metadata.mjs';
++const bytesHash = text => createHash('sha256').update(text,'utf8').digest('hex');
