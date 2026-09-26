@@ -2,25 +2,186 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KIRO v2 node bundle (server-side only)",
   "type": "object",
-  "required": ["schema_version", "story_id", "version", "nodes"],
+  "required": [
+    "schema_version",
+    "story_id",
+    "version",
+    "nodes"
+  ],
   "properties": {
-    "schema_version": {"const": 2},
-    "story_id": {"type": "string", "minLength": 1},
-    "version": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
-    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}}
+    "schema_version": {
+      "const": 2
+    },
+    "story_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    }
   },
   "$defs": {
-    "node": {
-      "type": "object", "required": ["id", "type", "text", "decision_text", "choices", "source"],
+    "choice": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "next"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "type": {"enum": ["scene", "ending"]},
-        "text": {"type": "string", "minLength": 1},
-        "decision_text": {"type": "string"},
-        "choices": {"type": "array", "items": {"type": "object", "required": ["id", "label", "next"], "properties": {"id": {"type": "string", "minLength": 1}, "label": {"type": "string", "minLength": 1}, "next": {"type": "string", "minLength": 1}}}},
-        "source": {"type": "object", "required": ["title", "revision", "url", "permalink", "html_sha256"]}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "title",
+        "url",
+        "permalink"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "permalink": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "html_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "passage_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        }
       },
-      "allOf": [{"if": {"properties": {"type": {"const": "ending"}}}, "then": {"properties": {"choices": {"maxItems": 0}}}, "else": {"properties": {"choices": {"minItems": 1}}}}]
+      "oneOf": [
+        {
+          "required": [
+            "revision",
+            "html_sha256"
+          ]
+        },
+        {
+          "required": [
+            "kind",
+            "file_sha256",
+            "passage_sha256",
+            "line"
+          ],
+          "properties": {
+            "kind": {
+              "const": "twee3-static-v1"
+            }
+          }
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "text",
+        "decision_text",
+        "choices",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "scene",
+            "ending"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_text": {
+          "type": "string"
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/choice"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "ending"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "choices": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "choices": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

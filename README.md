@@ -72,3 +72,29 @@ as public domain in the United States; this is **not** worldwide or Japanese
 translation/distribution clearance. Original text rights, Wikisource contributions
 and software licensing are separate. No repository-wide license is imposed.
 See [porting rules](docs/PORTING.md) and [implementation notes](docs/OFFLINE_PORT.md).
+
+
+## Additional branching works
+
+KIRO now has a fail-closed import path for plain static Twee 3 works. It is not a
+general Twine interpreter: macros, variables, HTML, setters, special runtime
+passages, cycles and undeclared dead ends are rejected rather than guessed.
+
+Rights are supplied as reviewed metadata, never inferred from an attribution
+line or source URL. Check a work without writing anything:
+
+```sh
+npm run import:twee -- --source /path/work.twee --metadata /path/rights.json --check
+```
+
+After an eligible work is reviewed, append it to the local library with the same
+command minus `--check`. Existing IDs are never overwritten. Every registered
+work is revalidated by:
+
+```sh
+npm run validate:library
+```
+
+See [static Twee import profile](docs/IMPORT_TWEE.md) and
+[metadata template](examples/twee-metadata.template.json). The fixture used by
+the importer tests is synthetic and cannot be served by the production library.

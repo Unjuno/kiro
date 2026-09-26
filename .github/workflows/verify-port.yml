@@ -34,6 +34,7 @@ jobs:
           mkdir -p validation-artifacts
           python3 tools/import_wikisource.py | tee validation-artifacts/import.json
           node tools/validate-story.mjs | tee validation-artifacts/graph.json
+          node tools/verify-library.mjs | tee validation-artifacts/library.json
           node -e "const s=JSON.parse(require('fs').readFileSync('stories/consider-the-consequences/story.json'));if(s.version!=='75b24d5c40c640bb')throw Error('Unexpected source version')"
       - name: Unit tests and exhaustive real-corpus HTML playthrough
         shell: bash
