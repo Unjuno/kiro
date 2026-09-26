@@ -106,3 +106,36 @@ Production library loading refuses any story marked `test_fixture`.
 
 Primary format reference:
 https://github.com/iftechfoundation/twine-specs/blob/master/twee-3-specification.md
+
+
+## Published Twine HTML intake
+
+If a licensor provides only a published Twine HTML build, first extract its embedded
+source passages without executing the game:
+
+```sh
+npm run extract:twine-html -- \
+  --source /path/to/game.html \
+  --output /path/to/review.twee \
+  --manifest-output /path/to/review.extract.json
+```
+
+The extractor reads the single `<tw-storydata>` block and its
+`<tw-passagedata>` children, decodes one HTML-serialization layer, preserves
+passage names/tags/layout and the declared start node, and records SHA-256 hashes
+for both the original HTML and extracted Twee. Script and style blocks are never
+executed and are not copied into story prose.
+
+Extraction is **not** approval for import. Review the resulting Twee source,
+rights evidence, and extractor manifest. Then run the normal `import:twee`
+check. Any macros, variables, setters, HTML, unsupported tags, cycles, or other
+stateful Twine features remain visible in the extracted source and are rejected
+by the downstream static compiler rather than being stripped.
+
+Use `--check` to inspect metadata without writing files:
+
+```sh
+npm run extract:twine-html -- --source /path/to/game.html --check
+```
+
+The HTML extractor refuses to overwrite existing output files.
