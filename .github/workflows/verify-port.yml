@@ -1,7 +1,7 @@
 name: KIRO complete port validation
 on:
   push:
-    branches: [kiro/full-local-port, design/living-book, main]
+    branches: [kiro/full-local-port, design/living-book, 'feature/**', main]
     paths:
       - 'app/**'
       - 'public/**'
