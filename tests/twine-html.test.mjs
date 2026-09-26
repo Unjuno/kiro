@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -92,7 +92,7 @@ test('CLI --check writes nothing, normal extraction refuses overwrite and writes
   const source=join(dir,'game.html');
   const output=join(dir,'game.twee');
   const manifest=join(dir,'extract.json');
-  require('node:fs').writeFileSync(source,html,'utf8');
+  writeFileSync(source,html,'utf8');
 
   const check=spawnSync(process.execPath,[
     'tools/extract-twine-html.mjs','--source',source,'--check'
