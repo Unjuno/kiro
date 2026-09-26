@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { compileTwee, TweeImportError } from '../lib/twee.mjs';
 import { loadLibrary } from '../lib/library.mjs';
+import { renderRequest } from '../lib/player.mjs';
 
 const sourcePath = new URL('./fixtures/static-twee/guide.twee', import.meta.url);
 const metadataPath = new URL('./fixtures/static-twee/guide.metadata.json', import.meta.url);
@@ -50,9 +51,9 @@ test('broken targets and cycles are rejected', () => {
   assert.throws(()=>compileTwee(broken,metadata),/Missing target/);
 
   const cyclic=source.replace(
-    ':: Red Ending [ending]\nThe red room is warm and bright. You decide that certainty was the thing you wanted tonight.',
-    ':: Red Ending\nThe red room is warm and bright.\n\n[[Return->Start]]'
-  );
+    '[[Open the blue door->Blue Ending]]',
+    '[[Open the blue door->Blue Ending]]\n[[Enter the loop->Loop]]'
+  ) + '\n:: Loop\nA circular stair returns to itself.\n\n[[Again->Loop]]\n[[Escape->Red Ending]]\n';
   assert.throws(()=>compileTwee(cyclic,metadata),/Cyclic works/);
 });
 
@@ -84,6 +85,18 @@ test('append-only importer writes a reproducible test library and refuses overwr
   assert.throws(()=>loadLibrary(root),/Synthetic fixtures/);
   const library=loadLibrary(root,{allowTestFixtures:true});
   assert.equal(library.get('protocol-fixture').report.endings,2);
+
+  const catalogPage=renderRequest('/?lang=ja',library);
+  assert.equal(catalogPage.status,200);
+  assert.match(catalogPage.html,/The Glass Path/);
+  assert.match(catalogPage.html,/自動検証専用の架空データ/);
+  assert.doesNotMatch(catalogPage.html,/Doris Webster|Three lives/);
+
+  const intro=renderRequest('/?lang=ja&story=protocol-fixture',library);
+  assert.equal(intro.status,200);
+  assert.match(intro.html,/Synthetic fixture/);
+  assert.match(intro.html,/Begin the test/);
+  assert.doesNotMatch(intro.html,/Wikisource \/ source|Helen Rogers/);
 
   const verify=spawnSync(process.execPath,[
     'tools/verify-library.mjs','--story-root',root,'--allow-test-fixtures',
