@@ -1,0 +1,29 @@
+{
+  "id": "replace-with-stable-work-id",
+  "title": "REPLACE: exact StoryTitle",
+  "import_profile": "kiro-twee3-static-v1",
+  "test_fixture": false,
+  "language": "en",
+  "authors": ["REPLACE: original author"],
+  "description": {
+    "en": "REPLACE: concise player-facing description"
+  },
+  "entry_label": "Begin",
+  "source_url": "https://example.invalid/REPLACE-WITH-CANONICAL-SOURCE",
+  "source_label": "REPLACE: source name",
+  "attribution": "REPLACE: original title, author, source, licence/public-domain basis, and adaptation/translation notice.",
+  "attribution_language": "en",
+  "content_notice": "",
+  "rights": {
+    "original_work": "REPLACE: licence or documented public-domain basis",
+    "evidence_url": "https://example.invalid/REPLACE-WITH-RIGHTS-EVIDENCE",
+    "verified_territories": ["REPLACE"],
+    "worldwide_clearance": "unverified",
+    "note": "REPLACE: licence conditions, attribution/share-alike duties, territorial limits, and any unresolved issues.",
+    "review_status": "unreviewed",
+    "translation_permitted": false,
+    "distribution_permitted": false,
+    "reviewed_by": "",
+    "reviewed_at": ""
+  }
+}
