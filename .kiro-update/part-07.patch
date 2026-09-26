@@ -1,0 +1,204 @@
++  for(let i=0;i<queue.length;i++)for(const c of index.get(queue[i]).choices){counts.set(c.next,counts.get(c.next)-1);if(counts.get(c.next)===0)queue.push(c.next);}
++  if(queue.length!==nodes.length)fail('Cyclic stories are outside the static DAG import profile');
++  const paths=new Map(nodes.map(n=>[n.id,0n]));paths.set(start,1n);
++  for(const id of queue)for(const c of index.get(id).choices)paths.set(c.next,paths.get(c.next)+paths.get(id));
++  const completePaths=endings.reduce((sum,id)=>sum+paths.get(id),0n);
++  const version=sha256(nodes).slice(0,16);
++  const bundle={schema_version:2,story_id:metadata.id,version,nodes};
++  const story={schema_version:2,id:metadata.id,version,test_fixture:Boolean(testFixture||metadata.test_fixture),title:title.text.trim(),
++    language:normalizeLanguage(metadata.language),authors:metadata.authors,description:metadata.description,
++    entries:[{id:start,label:metadata.entry_label??start}],source_url:metadata.source_url,
++    source_label:metadata.source_label??new URL(metadata.source_url).hostname,attribution:metadata.attribution,
++    attribution_language:metadata.attribution_language??metadata.language,rights,
++    localization:{mode:'agent-runtime',use_session_language:true,preserve_original_names:true},
++    content_notice:metadata.content_notice??'',statistics:{nodes:nodes.length,edges:report.edges,endings:endings.length}};
++  if(metadata.year!==undefined)story.year=metadata.year;
++  validateMetadata(story);
++  const manifest={format:'kiro-twee3-static-manifest-v1',version,test_fixture:Boolean(testFixture||metadata.test_fixture),
++    capture_sha256:sourceHash,bundle_sha256:sha256(bundle),inventory_ids:playable.map(p=>p.name).sort(),endings,
++    import_profile:'kiro-twee3-static-v1',metadata_sha256:sha256(metadata)};
++  return {story,bundle,manifest,report:{...report,acyclic:true,complete_paths:completePaths.toString()},source};
++}
+diff --git a/package.json b/package.json
+index e4ccf27..e3b1106 100644
+--- a/package.json
++++ b/package.json
+@@ -3,18 +3,28 @@
+   "version": "0.3.0",
+   "private": true,
+   "type": "module",
+-  "engines": { "node": "22.x" },
++  "engines": {
++    "node": "22.x"
++  },
+   "scripts": {
+     "dev": "next dev",
+     "start": "next start",
+     "import:story": "python3 tools/import_wikisource.py",
+-    "validate": "node tools/validate-story.mjs",
++    "validate": "node tools/validate-story.mjs && node tools/verify-library.mjs",
+     "test:js": "node --test tests/*.test.mjs",
+     "test:python": "python3 -m unittest discover -s tests -p 'test_*.py'",
+     "test": "npm run test:js && npm run test:python",
+     "build": "npm run validate && npm run test:js && next build",
+-    "serve:local": "node tools/local-server.mjs"
++    "serve:local": "node tools/local-server.mjs",
++    "import:twee": "node tools/import-twee.mjs",
++    "validate:library": "node tools/verify-library.mjs"
++  },
++  "dependencies": {
++    "next": "^15.5.24",
++    "react": "^19.1.0",
++    "react-dom": "^19.1.0"
+   },
+-  "dependencies": { "next": "^15.5.24", "react": "^19.1.0", "react-dom": "^19.1.0" },
+-  "overrides": { "postcss": "8.5.28" }
++  "overrides": {
++    "postcss": "8.5.28"
++  }
+ }
+diff --git a/public/kiro.css b/public/kiro.css
+index 551d4bb..5341a81 100644
+--- a/public/kiro.css
++++ b/public/kiro.css
+@@ -18,3 +18,10 @@
+ @media print{.brand,.site-footer,.agent,.toolbar,.reading-note,.choice-section,.source-link{display:none}.site-frame,.shell{padding:0}.reader{max-width:none}.prose{font-size:12pt;line-height:1.65}}
+ /* Do not let a stretched cast tile expose the atlas's book-vignette row. */
+ .character-card>.portrait{align-self:center;aspect-ratio:144/176}
++/* The same state can be handed to an agent without clipboard JavaScript. */
++.agent-link{display:inline-flex;min-height:48px;align-items:center;padding:8px 0;color:var(--wine);font:13px/1.6 var(--sans);overflow-wrap:anywhere}
++.agent-note{font:11px/1.9 var(--sans);max-width:65ch}
++.generic-book{min-height:300px;display:flex;flex-direction:column;justify-content:center;overflow-wrap:anywhere}
++.generic-book .book-title{margin-block:36px}
++.character-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
++@media(max-width:680px){.character-grid{grid-template-columns:1fr}}
+diff --git a/schema/nodes.schema.json b/schema/nodes.schema.json
+index 3b71742..0a461c7 100644
+--- a/schema/nodes.schema.json
++++ b/schema/nodes.schema.json
+@@ -2,25 +2,141 @@
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "title": "KIRO v2 node bundle (server-side only)",
+   "type": "object",
+-  "required": ["schema_version", "story_id", "version", "nodes"],
++  "required": [
++    "schema_version",
++    "story_id",
++    "version",
++    "nodes"
++  ],
+   "properties": {
+-    "schema_version": {"const": 2},
+-    "story_id": {"type": "string", "minLength": 1},
+-    "version": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+-    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}}
++    "schema_version": {
++      "const": 2
++    },
++    "story_id": {
++      "type": "string",
++      "minLength": 1
++    },
++    "version": {
++      "type": "string",
++      "pattern": "^[0-9a-f]{16}$"
++    },
++    "nodes": {
++      "type": "array",
++      "minItems": 1,
++      "items": {
++        "$ref": "#/$defs/node"
++      }
++    }
+   },
+   "$defs": {
+     "node": {
+-      "type": "object", "required": ["id", "type", "text", "decision_text", "choices", "source"],
++      "type": "object",
++      "required": [
++        "id",
++        "type",
++        "text",
++        "decision_text",
++        "choices",
++        "source"
++      ],
+       "properties": {
+-        "id": {"type": "string", "minLength": 1},
+-        "type": {"enum": ["scene", "ending"]},
+-        "text": {"type": "string", "minLength": 1},
+-        "decision_text": {"type": "string"},
+-        "choices": {"type": "array", "items": {"type": "object", "required": ["id", "label", "next"], "properties": {"id": {"type": "string", "minLength": 1}, "label": {"type": "string", "minLength": 1}, "next": {"type": "string", "minLength": 1}}}},
+-        "source": {"type": "object", "required": ["title", "revision", "url", "permalink", "html_sha256"]}
++        "id": {
++          "type": "string",
++          "minLength": 1
++        },
++        "type": {
++          "enum": [
++            "scene",
++            "ending"
++          ]
++        },
++        "text": {
++          "type": "string",
++          "minLength": 1
++        },
++        "decision_text": {
++          "type": "string"
++        },
++        "choices": {
++          "type": "array",
++          "items": {
++            "type": "object",
++            "required": [
++              "id",
++              "label",
++              "next"
++            ],
++            "properties": {
++              "id": {
++                "type": "string",
++                "minLength": 1
++              },
++              "label": {
++                "type": "string",
++                "minLength": 1
++              },
++              "next": {
++                "type": "string",
++                "minLength": 1
++              }
++            }
++          }
++        },
++        "source": {
++          "type": "object",
++          "required": [
++            "title",
++            "url",
++            "permalink"
++          ],
++          "anyOf": [
++            {
++              "required": [
++                "revision",
++                "html_sha256"
++              ]
++            },
++            {
++              "required": [
++                "kind",
++                "file_sha256",
++                "passage_sha256",
++                "line"
++              ],
++              "properties": {
++                "kind": {
++                  "const": "twee3-static-v1"
++                }
++              }
++            }
++          ]
++        }
+       },
