@@ -17,7 +17,8 @@
     "build": "npm run validate && npm run test:js && next build",
     "serve:local": "node tools/local-server.mjs",
     "import:twee": "node tools/import-twee.mjs",
-    "validate:library": "node tools/verify-library.mjs"
+    "validate:library": "node tools/verify-library.mjs",
+    "extract:twine-html": "node tools/extract-twine-html.mjs"
   },
   "dependencies": {
     "next": "^15.5.24",
