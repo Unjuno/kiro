@@ -1,0 +1,108 @@
++const nonempty = value => typeof value==='string'&&Boolean(value.trim());
++export class TweeImportError extends Error {
++  constructor(message,line=0) {super(`${line?`Line ${line}: `:''}${message}`);this.name='TweeImportError';this.line=line;}
++}
++const fail = (message,line) => {throw new TweeImportError(message,line);};
++
++function header(value,line) {
++  const match=/^::\s*((?:\\.|[^\[\]{}\\])+?)(?:\s*\[([^\]]*)\])?\s*(\{.*\})?\s*$/.exec(value);
++  if(!match) fail('Unsupported or malformed passage header',line);
++  const name=match[1].trim().replace(/\\(.)/g,'$1');
++  if(!name || name.length>200 || /[\[\]|\x00-\x1f]/u.test(name)) fail('Unsupported passage name',line);
++  const tags=(match[2]??'').trim().split(/\s+/).filter(Boolean);
++  if(tags.some(tag=>tag!=='ending')) fail('Only the [ending] tag is supported by the static profile; code/style/startup tags cannot be imported',line);
++  if(match[3]) {
++    let layout;try{layout=JSON.parse(match[3]);}catch{fail('Invalid header metadata JSON',line);}
++    if(!layout||Array.isArray(layout)||Object.entries(layout).some(([key,val])=>!['position','size'].includes(key)||typeof val!=='string')) fail('Only position/size layout metadata is supported',line);
++  }
++  return {name,tags,line,body:[]};
++}
++function rejectDynamic(value,line) {
++  if(/<<|>>|\([\w-]+\s*:|(?:\$|_)[A-Za-z][\w]*|[\[\]<>]|`|\{\{|\}\}/u.test(value))
++    fail('Dynamic macros, variables, hooks, HTML and embedded code are not supported',line);
++}
++function parseLink(value,line) {
++  const match=/^\[\[([^\[\]\n]+)\]\]$/.exec(value);
++  if(!match)fail('Links must occupy a whole line at the end of a passage',line);
++  const separators=[...match[1].matchAll(/->|<-|\|/g)];
++  if(separators.length>1)fail('Ambiguous link syntax or setter',line);
++  let label=match[1].trim(),target=label;
++  if(separators.length) {
++    const sep=separators[0],left=match[1].slice(0,sep.index).trim(),right=match[1].slice(sep.index+sep[0].length).trim();
++    [label,target]=sep[0]==='<-'?[right,left]:[left,right];
++  }
++  if(!label||!target||/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(target)) fail('Empty or external link is not a story choice',line);
++  rejectDynamic(label,line);rejectDynamic(target,line);
++  return {label,next:target};
++}
++/** Pure conversion. It never executes imported contents or writes files. */
++export function compileTwee(source,metadata,{testFixture=false}={}) {
++  if(typeof source!=='string'||Buffer.byteLength(source)>2_000_000) fail('Source must be UTF-8 text, at most 2 MB');
++  if(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(source)) fail('Control characters are not supported');
++  if(!metadata||!STORY_ID.test(metadata.id??''))fail('Valid metadata.id is required');
++  if(metadata.import_profile!=='kiro-twee3-static-v1')fail('Declare import_profile: kiro-twee3-static-v1 explicitly');
++  const rights=metadata.rights;
++  if(rights?.review_status!=='reviewed'||rights?.translation_permitted!==true||rights?.distribution_permitted!==true||
++      !nonempty(rights.reviewed_by)||!/^\d{4}-\d{2}-\d{2}$/.test(rights.reviewed_at??'')||!isSourceURL(rights.evidence_url))
++    fail('Recorded review, reviewer, date, evidence and explicit translation/distribution permissions are required (not legal verification)');
++  if(!isSourceURL(metadata.source_url))fail('HTTPS source URL is required');
++  const lines=source.replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n').split('\n');
++  const passages=[];let current;
++  for(let i=0;i<lines.length;i++) {
++    if(lines[i].startsWith('::')) {
++      if(passages.length>=500)fail('At most 500 passages are supported',i+1);
++      current=header(lines[i],i+1);passages.push(current);
++    } else if(current)current.body.push(lines[i]);
++    else if(lines[i].trim())fail('Text before the first passage is not supported',i+1);
++  }
++  const names=new Set();
++  for(const p of passages) {if(names.has(p.name))fail(`Duplicate passage: ${p.name}`,p.line);names.add(p.name);p.text=p.body.join('\n').trimEnd();}
++  const title=passages.find(p=>p.name==='StoryTitle');
++  if(!title||!nonempty(title.text)||title.text.includes('\n')||title.tags.length)fail('One plain StoryTitle passage is required');
++  if(metadata.title && metadata.title!==title.text.trim())fail('Metadata title does not match StoryTitle');
++  const dataPassage=passages.find(p=>p.name==='StoryData');let data={};
++  if(dataPassage) {
++    if(dataPassage.tags.length)fail('StoryData may not carry story tags',dataPassage.line);
++    try{data=JSON.parse(dataPassage.text);}catch{fail('Invalid StoryData JSON',dataPassage.line);}
++    if(!data||Array.isArray(data)||!nonempty(data.ifid)||!/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/.test(data.ifid))fail('StoryData.ifid must be an uppercase v4 UUID',dataPassage.line);
++    if(Object.keys(data).some(k=>!['ifid','format','format-version','start','tag-colors','zoom'].includes(k)))fail('Unknown StoryData field',dataPassage.line);
++    if(data.start!==undefined&&!nonempty(data.start))fail('StoryData.start must be a passage name',dataPassage.line);
++  }
++  if(metadata.start && data.start && metadata.start!==data.start)fail('Conflicting entry passage declarations');
++  const start=metadata.start??data.start??'Start';
++  if(!nonempty(start))fail('Invalid entry passage');
++  const playable=passages.filter(p=>!['StoryTitle','StoryData'].includes(p.name));
++  // Story-format special passages can alter every scene; never silently drop them.
++  for(const p of playable)if(/^Story[A-Z]|^(?:PassageHeader|PassageFooter|PassageReady|PassageDone)$/.test(p.name)) fail(`Unsupported special passage: ${p.name}`,p.line);
++  if(metadata.ending_passages!==undefined && (!Array.isArray(metadata.ending_passages)||!metadata.ending_passages.every(nonempty))) fail('ending_passages must be an array of exact passage names');
++  const declared=new Set(metadata.ending_passages??[]);
++  for(const name of declared)if(!playable.some(p=>p.name===name))fail(`Unknown declared ending: ${name}`);
++  const sourceHash=bytesHash(source),nodes=[];
++  for(const p of playable) {
++    let choicesStarted=false;const prose=[],choices=[];
++    for(let i=0;i<p.body.length;i++) {
++      const line=p.body[i],trimmed=line.trim();
++      if(trimmed.startsWith('[[')) {
++        choicesStarted=true;const parsed=parseLink(trimmed,p.line+i+1);
++        choices.push({id:`c${choices.length+1}`,...parsed});
++      } else if(trimmed) {
++        if(choicesStarted) fail('Prose after choices is unsupported; move it before choices explicitly',p.line+i+1);
++        rejectDynamic(line,p.line+i+1);prose.push(line);
++      } else if(!choicesStarted)prose.push('');
++    }
++    const ending=p.tags.includes('ending')||declared.has(p.name);
++    if(!ending&&!choices.length)fail(`No choices in ${p.name}; declare a real ending explicitly`,p.line);
++    if(ending&&choices.length)fail(`Ending ${p.name} has outgoing choices`,p.line);
++    const text=prose.join('\n').trim();if(!text)fail(`Empty narration: ${p.name}`,p.line);
++    nodes.push({id:p.name,type:ending?'ending':'scene',text,decision_text:'',choices,
++      source:{kind:'twee3-static-v1',title:p.name,url:metadata.source_url,permalink:metadata.source_url,
++        file_sha256:sourceHash,passage_sha256:bytesHash(p.text),line:p.line}});
++  }
++  const endings=nodes.filter(n=>n.type==='ending').map(n=>n.id).sort();
++  if(endings.length<2)fail('A multi-ending work requires at least two explicit endings');
++  const report=validateGraph({nodes},{entries:[start],inventoryIds:playable.map(p=>p.name),endingIds:endings});
++  if(report.status!=='PASS')fail(report.errors.join('; '));
++  // Restrict this importer to DAGs so exhaustive playthrough has a finite meaning.
++  const counts=new Map(nodes.map(n=>[n.id,0]));
++  for(const n of nodes)for(const c of n.choices)counts.set(c.next,counts.get(c.next)+1);
++  const queue=[...counts].filter(([,n])=>n===0).map(([id])=>id),index=new Map(nodes.map(n=>[n.id,n]));
