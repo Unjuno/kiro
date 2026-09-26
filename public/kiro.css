@@ -18,3 +18,9 @@
 @media print{.brand,.site-footer,.agent,.toolbar,.reading-note,.choice-section,.source-link{display:none}.site-frame,.shell{padding:0}.reader{max-width:none}.prose{font-size:12pt;line-height:1.65}}
 /* Do not let a stretched cast tile expose the atlas's book-vignette row. */
 .character-card>.portrait{align-self:center;aspect-ratio:144/176}
+
+/* Generic volumes keep the Living Book visual system without borrowing another work's cast art. */
+.generic-book{min-height:300px;display:flex;flex-direction:column;justify-content:center;overflow-wrap:anywhere}
+.generic-book .book-title{margin-block:36px}
+.character-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.character-card:not(:has(.portrait)) .character-copy{min-height:150px}
