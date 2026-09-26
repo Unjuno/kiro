@@ -1,0 +1,30 @@
+{
+  "id": "protocol-fixture",
+  "title": "The Glass Path",
+  "test_fixture": true,
+  "import_profile": "kiro-twee3-static-v1",
+  "language": "en",
+  "authors": ["KIRO synthetic test fixture"],
+  "description": {
+    "en": "Synthetic branching data for regression tests only.",
+    "ja": "自動検証専用の架空データ。公開作品ではありません。"
+  },
+  "entry_label": "Begin the test",
+  "source_url": "https://example.invalid/kiro/fixture.twee",
+  "source_label": "Synthetic fixture",
+  "attribution": "This is synthetic test data, not a ported story. Do not present it as a published work.",
+  "attribution_language": "en",
+  "content_notice": "",
+  "rights": {
+    "original_work": "TEST-FIXTURE-ONLY",
+    "evidence_url": "https://example.invalid/kiro/fixture-rights",
+    "verified_territories": ["TEST"],
+    "worldwide_clearance": "test-only",
+    "note": "Synthetic data created solely to test importer behavior.",
+    "review_status": "reviewed",
+    "translation_permitted": true,
+    "distribution_permitted": true,
+    "reviewed_by": "KIRO test suite",
+    "reviewed_at": "2026-09-26"
+  }
+}
