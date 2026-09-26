@@ -1,0 +1,58 @@
++  return `<article class="story-card"><div class="feature-art">${bookCover(story,lang)}</div><div class="feature-copy"><p class="eyebrow">${esc(d.format)} <span class="eyebrow-rule"></span> ${esc(story.year??'')}</p><h2>${esc(story.title)}</h2><p class="author-line" lang="en">${(story.authors??[]).map(esc).join(' &amp; ')}</p><p class="story-description">${esc(sourceDescription(story,lang))}</p>${stats}${anchor(d.enter,{lang,story:story.id,v:story.version},'button-primary')}<p class="feature-footnote">${esc(d.reading)}</p></div></article>`;
+ }
+-function characterCard(entry,state) {
+-  const d=design(state.lang),person=cast[entry.id];
+-  return `<a class="character-card" href="${esc(href({...state,node:entry.id}))}">${portrait(entry.id)}<span class="character-copy"><span class="character-name" lang="en">${esc(entry.label)}</span>${person?`<span class="character-theme">${esc(person[/^ja(?:-|$)/i.test(state.lang)?'ja':'en'])}</span>`:''}<span class="character-action">${esc(d.choose)} <span aria-hidden="true">↗</span></span></span></a>`;
++function characterCard(entry,state,story) {
++  const d=design(state.lang),person=story.id==='consider-the-consequences'?cast[entry.id]:null;
++  return `<a class="character-card" href="${esc(href({...state,node:entry.id}))}">${person?portrait(entry.id):''}<span class="character-copy"><span class="character-name" lang="en">${esc(entry.label)}</span>${person?`<span class="character-theme">${esc(person[/^ja(?:-|$)/i.test(state.lang)?'ja':'en'])}</span>`:''}<span class="character-action">${esc(person?d.choose:ui(state.lang).next)} <span aria-hidden="true">↗</span></span></span></a>`;
++}
++
++function browserNotice(story,lang) {
++  if(story.language==='en') return ui(lang).browser;
++  const j=/^ja(?:-|$)/i.test(lang);
++  return j?`本文の原文言語は ${story.language} です。ブラウザ単体では自動翻訳されません。音声エージェントは現在の場面と選択肢だけを選択言語に訳してください。`:`The canonical source language is ${story.language}. Browser text is not automatically translated. An external voice agent should translate only the current scene and choices.`;
+ }
+ 
+ /** Pure current-state rendering; no future prose, client graph, session DB or prefetch. */
+ export function renderRequest(input,library) {
+-  let url;
+-  try{url=new URL(input,'https://kiro.invalid');}catch{return failure({lang:'en'},'invalid',400);}
+-  if(url.pathname!=='/'||url.href.length>8192)return failure({lang:'en'},'invalid',400);
+-  const state={};
+-  for(const key of ['lang','story','node','v']){
+-    if(url.searchParams.getAll(key).length>1)return failure({lang:'en'},'invalid',400);
+-    state[key]=url.searchParams.get(key)??'';
+-  }
+-  if(!state.lang)return languageGate(state);
+-  const selected=normalizeLanguage(state.lang);
+-  if(!selected)return languageGate(state,'Please use a valid language code, for example ja or en.');
+-  state.lang=selected;
++  const resolution=resolveRequest(input,library);
++  const {state,stage,status,reason}=resolution;
++  if(state.format==='json') return agentResponse(input,library);
++  if(stage==='error') return failure(state,reason,status);
++  if(stage==='language') return languageGate(state,status===400?'Please use a valid language code, for example ja or en.':'');
++  const selected=state.lang;
+   const text=ui(selected),d=design(selected);
+   if(!state.story){
+     if(state.node||state.v)return failure(state);
+     const cards=[...library.values()].map(story=>catalogCard(story,selected)).join('');
+     if(!cards)return failure(state,'invalid',503);
+-    return page(`<section class="catalog-heading"><p class="eyebrow">02 <span class="eyebrow-rule"></span> ${esc(d.collection)}</p><h1>${esc(text.title)}</h1><p class="catalog-deck">${esc(d.shelf)}</p></section>${cards}${modes(selected)}${!/^en(?:-|$)|^ja(?:-|$)/i.test(selected)?`<p class="fallback-note">${esc(text.fallback)}</p>`:''}${toolbar(state,text)}${protocol(selected,'catalog',text)}`,selected,'catalog');
++    return page(`<section class="catalog-heading"><p class="eyebrow">02 <span class="eyebrow-rule"></span> ${esc(d.collection)}</p><h1>${esc(text.title)}</h1><p class="catalog-deck">${esc(d.shelf)}</p></section>${cards}${modes(selected)}${!/^en(?:-|$)|^ja(?:-|$)/i.test(selected)?`<p class="fallback-note">${esc(text.fallback)}</p>`:''}${toolbar(state,text)}${protocol(selected,'catalog',text,state)}`,selected,'catalog');
+   }
+   const story=library.get(state.story);
+   if(!story)return failure(state);
+   if(state.v&&state.v!==story.version)return failure(state,'version',409);
+   state.v=story.version;
+   if(!state.node){
+-    return page(`<section class="story-intro"><div class="intro-copy"><p class="eyebrow">03 <span class="eyebrow-rule"></span> ${esc(d.original)} / ${esc(story.year??'')}</p><h1>${esc(story.title)}</h1><p class="author-line" lang="en">${(story.authors??[]).map(esc).join(' &amp; ')}</p><p class="story-description">${esc(story.description[/^ja(?:-|$)/i.test(selected)?'ja':'en'])}</p>${attribution(story,text,selected)}</div>${bookCover(story,selected)}</section><section class="character-section"><div class="section-heading"><p class="eyebrow">${esc(text.characters)}</p><h2>${esc(d.people)}</h2></div><div class="character-grid">${story.entries.map(entry=>characterCard(entry,state)).join('')}</div><details class="content-warning"><summary>${selected==='ja'?'作品の内容に関する注意':'Content note'}</summary><p lang="en">${esc(story.content_notice??'')}</p></details></section>${toolbar(state,text)}${protocol(selected,'story',text)}`,selected,'story');
++    return page(`<section class="story-intro"><div class="intro-copy"><p class="eyebrow">03 <span class="eyebrow-rule"></span> ${esc(d.original)} / ${esc(story.year??'')}</p><h1>${esc(story.title)}</h1><p class="author-line" lang="en">${(story.authors??[]).map(esc).join(' &amp; ')}</p><p class="story-description">${esc(sourceDescription(story,selected))}</p>${attribution(story,text,selected)}</div>${bookCover(story,selected)}</section><section class="character-section"><div class="section-heading"><p class="eyebrow">${esc(text.characters)}</p><h2>${esc(story.entries.length===1?(/^ja(?:-|$)/i.test(selected)?'物語を始める':'Begin this story'):(/^ja(?:-|$)/i.test(selected)?`${story.entries.length}つの視点。どこから始めますか。`:`${story.entries.length} viewpoints. Where will you begin?`))}</h2></div><div class="character-grid">${story.entries.map(entry=>characterCard(entry,state,story)).join('')}</div><details class="content-warning"><summary>${selected==='ja'?'作品の内容に関する注意':'Content note'}</summary><p lang="en">${esc(story.content_notice??'')}</p></details></section>${toolbar(state,text)}${protocol(selected,'story',text,state)}`,selected,'story');
+   }
+   const node=story.nodes.get(state.node);
+   if(!node)return failure(state);
+@@ -184,5 +177,5 @@ export function renderRequest(input,library) {
+   const choices=ending
+     ? `<section class="ending-return"><h2 data-kiro-ending>${esc(text.ending)}</h2><p>${esc(d.endingNote)}</p>${anchor(text.restart,{lang:state.lang,story:state.story,v:state.v},'button-primary')}</section>`
+     : `<section class="choice-section" aria-labelledby="choice-heading"><p class="eyebrow">${esc(d.step)}</p><h2 id="choice-heading">${esc(text.choices)}</h2><section class="decision" lang="${esc(story.language)}" data-kiro-decision-text>${paragraphs(node.decision_text)}</section><div class="stack" data-kiro-visible-choices>${node.choices.map((choice,index)=>`<a class="choice" href="${esc(href({...state,node:choice.next}))}" data-kiro-choice-id="${esc(choice.id)}" lang="${esc(story.language)}"><span class="choice-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="choice-label">${esc(choice.label)}</span><span class="arrow" aria-hidden="true">→</span></a>`).join('')}</div></section>`;
