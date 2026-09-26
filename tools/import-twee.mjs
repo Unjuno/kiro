@@ -96,7 +96,7 @@ try {
   writeFileSync(join(staging,'nodes.json'),json(compiled.bundle),'utf8');
   writeFileSync(join(staging,'source.manifest.json'),json(compiled.manifest),'utf8');
   writeFileSync(join(staging,'validation.json'),json(compiled.report),'utf8');
-  writeFileSync(join(staging,'source.twee'),source.endsWith('\n')?source:source+'\n','utf8');
+  writeFileSync(join(staging,'source.twee'),source,'utf8');
   writeFileSync(join(staging,'import.metadata.json'),json(metadata),'utf8');
   writeFileSync(join(staging,'ATTRIBUTION.md'),attributionMarkdown(compiled.story),'utf8');
 
