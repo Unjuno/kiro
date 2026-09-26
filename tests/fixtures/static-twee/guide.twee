@@ -1,0 +1,17 @@
+:: StoryTitle
+The Glass Path
+
+:: StoryData
+{"ifid":"123E4567-E89B-42D3-A456-426614174000","start":"Start"}
+
+:: Start
+At dusk, a corridor divides around a glass wall. One door glows red; the other reflects the blue of the evening sky.
+
+[[Open the red door->Red Ending]]
+[[Open the blue door->Blue Ending]]
+
+:: Red Ending [ending]
+The red room is warm and bright. You decide that certainty was the thing you wanted tonight.
+
+:: Blue Ending [ending]
+The blue door opens onto cool air and a wider road. You leave without knowing where it ends.
